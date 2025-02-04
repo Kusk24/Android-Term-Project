@@ -12,6 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.androidtermprojectmotopedia.View.LoginPage
+import com.example.androidtermprojectmotopedia.View.Noticiation
+import com.example.androidtermprojectmotopedia.View.NotificationScreen
+import com.example.androidtermprojectmotopedia.View.SettingScreen
 import com.example.androidtermprojectmotopedia.ui.theme.AndroidTermProjectMotopediaTheme
 
 class MainActivity : ComponentActivity() {
@@ -25,7 +28,7 @@ class MainActivity : ComponentActivity() {
 //                        name = "Android",
 //                        modifier = Modifier.padding(innerPadding)
 //                    )
-                    LoginPage(modifier = Modifier.padding(innerPadding))
+                    SettingScreen(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
