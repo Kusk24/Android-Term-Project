@@ -2,6 +2,7 @@ package com.example.androidtermprojectmotopedia.view
 
 import android.content.res.Resources.Theme
 import android.graphics.drawable.shapes.Shape
+import android.provider.ContactsContract.Profile
 import android.widget.Switch
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
@@ -26,6 +27,7 @@ import androidx.compose.material.icons.automirrored.outlined.Help
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Upload
@@ -58,6 +60,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.launch
 
@@ -68,7 +71,7 @@ fun DetailedDrawerExample(
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    var selectedItem  by remember {mutableStateOf("Settings")}
+    var selectedItem  by remember {mutableStateOf("Home")}
     var theme by remember {mutableStateOf(false)}
 
 
@@ -79,7 +82,6 @@ fun DetailedDrawerExample(
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
                         .verticalScroll(rememberScrollState())
-
                 ) {
                     Spacer(Modifier.height(12.dp))
                     Text("Motopedia", modifier = Modifier.padding(16.dp), style = MaterialTheme.typography.titleLarge)
@@ -159,6 +161,14 @@ fun DetailedDrawerExample(
                     Text("Management", modifier = Modifier.padding(16.dp), style = MaterialTheme.typography.titleMedium)
 
                     NavigationDrawerItem(
+                        label = { Text("Profile")},
+                        selected = selectedItem == "Profile",
+                        icon = { Icon(Icons.Default.Person, contentDescription = null) },
+                        onClick = { selectedItem = "Profile"
+                                    scope.launch{drawerState.close()}
+                        }
+                    )
+                    NavigationDrawerItem(
                         label = { Text("Settings") },
                         selected = selectedItem == "Settings",
                         icon = { Icon(Icons.Outlined.Settings, contentDescription = null) },
@@ -174,14 +184,26 @@ fun DetailedDrawerExample(
                         onClick = { /* Handle click */ },
                     )
 
-//                    Row(modifier = Modifier.fillMaxWidth()) {
-//                        Text("Theme", modifier = Modifier.wrapContentWidth(Alignment.Start))
-//
-//                        Switch(checked = theme, onCheckedChange = {
-//                            theme = it
-//                        }, modifier = Modifier.wrapContentWidth(Alignment.End))
-//                    }
+                    ConstraintLayout(modifier = Modifier.fillMaxWidth().height(50.dp).padding(16.dp)) {
+
+                            val (item1,item2) = createRefs()
+
+                            Text("Theme", modifier = Modifier.wrapContentWidth(Alignment.Start)
+                                .constrainAs(item1){
+                                    start.linkTo(parent.start)
+                                })
+
+                            Switch(checked = theme, onCheckedChange = {
+                                theme = it
+                            }, modifier = Modifier.wrapContentHeight(Alignment.Bottom)
+                                .constrainAs(item2){
+                                    end.linkTo(parent.end)
+                                })
+
+                    }
+
                     Spacer(Modifier.height(12.dp))
+
                 }
             }
         },  gesturesEnabled = true,
@@ -217,6 +239,8 @@ fun DetailedDrawerExample(
 
                 "Settings" -> SettingScreen(modifier = Modifier.padding(innerPadding))
 
+                "Profile" -> ProfileScreen(modifier = Modifier.padding(innerPadding))
+
                 "Notification" -> NotificationScreen(modifier = Modifier.padding(innerPadding))
             }
 //            content(innerPadding)
@@ -227,14 +251,6 @@ fun DetailedDrawerExample(
 @Composable
 fun HomeScreen(modifier : Modifier) {
     DetailedDrawerExample { paddingValues ->
-        Column(
-            modifier = Modifier
-                .padding(paddingValues)
-                .padding(16.dp) // Additional padding for spacing
-        ) {
-            Text(text = "Welcome to Motopedia!", style = MaterialTheme.typography.headlineMedium)
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "Explore the world of motorcycles.", style = MaterialTheme.typography.bodyLarge)
-        }
+        LoginPage(modifier = Modifier.padding(paddingValues))
     }
 }
