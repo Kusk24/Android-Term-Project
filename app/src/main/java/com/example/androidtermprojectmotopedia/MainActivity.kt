@@ -11,11 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.androidtermprojectmotopedia.View.LoginPage
-import com.example.androidtermprojectmotopedia.View.Noticiation
-import com.example.androidtermprojectmotopedia.View.NotificationScreen
-import com.example.androidtermprojectmotopedia.View.SettingScreen
+import com.example.androidtermprojectmotopedia.view.SettingScreen
 import com.example.androidtermprojectmotopedia.ui.theme.AndroidTermProjectMotopediaTheme
+import com.example.androidtermprojectmotopedia.view.HomeScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,7 +26,7 @@ class MainActivity : ComponentActivity() {
 //                        name = "Android",
 //                        modifier = Modifier.padding(innerPadding)
 //                    )
-                    SettingScreen(modifier = Modifier.padding(innerPadding))
+                    HomeScreen(modifier = Modifier.padding(innerPadding))
                 }
             }
         }

@@ -1,6 +1,5 @@
-package com.example.androidtermprojectmotopedia.View
+package com.example.androidtermprojectmotopedia.view
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
@@ -19,7 +18,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 
 @Composable
-fun LoginPage(modifier: Modifier) {
+fun LoginPage(modifier : Modifier) {
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
 
         val (item1, item2, item3, item4) = createRefs()

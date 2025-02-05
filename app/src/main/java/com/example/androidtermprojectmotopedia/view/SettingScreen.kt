@@ -1,4 +1,4 @@
-package com.example.androidtermprojectmotopedia.View
+package com.example.androidtermprojectmotopedia.view
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
@@ -37,7 +37,7 @@ fun SettingScreen(modifier : Modifier){
 
         Row(modifier = Modifier
             .clickable {  }.constrainAs(box1){
-            top.linkTo(parent.top, 50.dp)
+            top.linkTo(parent.top, 100.dp)
             start.linkTo(parent.start)
             end.linkTo(parent.end)
         }.border(1.dp, Color.Gray, RoundedCornerShape(15.dp)).height(50.dp).fillMaxWidth(),
