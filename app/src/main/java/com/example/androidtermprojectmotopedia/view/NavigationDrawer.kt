@@ -213,21 +213,30 @@ fun DetailedDrawerExample(
     {
         Scaffold(
             topBar = {
-                TopAppBar(
-                    title = { Text(selectedItem) },
-                    navigationIcon = {
-                        IconButton(onClick = {
-                            scope.launch {
-                                if (drawerState.isClosed) {
-                                    drawerState.open()
-                                } else {
-                                    drawerState.close()
-                                }
+                AppToolbar(
+                    title = selectedItem,
+                    onNavigationClick = {
+                        scope.launch {
+                            if (drawerState.isClosed) {
+                                drawerState.open()
+                            } else {
+                                drawerState.close()
                             }
-                        }) {
-                            Icon(Icons.Default.Menu, contentDescription = "Menu")
                         }
                     }
+//                    navigationIcon = {
+//                        IconButton(onClick = {
+//                            scope.launch {
+//                                if (drawerState.isClosed) {
+//                                    drawerState.open()
+//                                } else {
+//                                    drawerState.close()
+//                                }
+//                            }
+//                        }) {
+//                            Icon(Icons.Default.Menu, contentDescription = "Menu")
+//                        }
+//                    }
                 )
             }
         ) { innerPadding ->
