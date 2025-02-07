@@ -24,6 +24,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Help
+import androidx.compose.material.icons.filled.Bookmarks
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
@@ -62,6 +63,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import coil3.compose.AsyncImage
+import com.example.androidtermprojectmotopedia.repository.MyFirebaseMessagingService
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -141,7 +143,7 @@ fun DetailedDrawerExample(
                         selected = false,
                         icon = { Icon(Icons.Default.Upload, contentDescription = null) },
                         onClick = {
-                            selectedItem = "Search"
+                            selectedItem = "Upload"
                             scope.launch { drawerState.close()}
                         }
                     )
@@ -152,6 +154,16 @@ fun DetailedDrawerExample(
                         icon = { Icon(Icons.Default.Notifications, contentDescription = null) },
                         onClick = {
                             selectedItem = "Notification"
+                            scope.launch {drawerState.close()}
+                        }
+                    )
+
+                    NavigationDrawerItem(
+                        label = {Text("Saved")},
+                        selected = false,
+                        icon = { Icon(Icons.Default.Bookmarks, contentDescription = null) },
+                        onClick = {
+                            selectedItem = "Saved"
                             scope.launch {drawerState.close()}
                         }
                     )
@@ -250,6 +262,8 @@ fun DetailedDrawerExample(
 
                 "Profile" -> ProfileScreen(modifier = Modifier.padding(innerPadding))
 
+                "Saved" -> SavedScreen(modifier = Modifier.padding(innerPadding))
+
                 "Notification" -> NotificationScreen(modifier = Modifier.padding(innerPadding))
             }
 //            content(innerPadding)
@@ -257,9 +271,12 @@ fun DetailedDrawerExample(
     }
 }
 
+public val OurFirebaseMessaging = MyFirebaseMessagingService()
+
 @Composable
 fun HomeScreen(modifier : Modifier) {
     DetailedDrawerExample { paddingValues ->
+//        OurFirebaseMessaging.fetchFCMToken()
         LoginPage(modifier = Modifier.padding(paddingValues))
     }
 }

@@ -59,7 +59,7 @@ fun LoginPage(modifier : Modifier) {
             }
         )
 
-        Button(onClick = {}, modifier = Modifier
+        Button(onClick = {  }, modifier = Modifier
             .constrainAs(item3) {
                 top.linkTo(line1, 20.dp)
                 start.linkTo(parent.start)
