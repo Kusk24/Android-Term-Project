@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "481984978338",
+    "project_id": "motopedia-27904",
+    "storage_bucket": "motopedia-27904.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:481984978338:android:cf0486382248c3985c26fb",
+        "android_client_info": {
+          "package_name": "com.example.androidtermprojectmotopedia"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA08HuvRV3EX1jx-fNCnru01syRG1YncPY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
