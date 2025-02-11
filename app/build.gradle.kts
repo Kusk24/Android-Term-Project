@@ -5,6 +5,8 @@ plugins {
 
     id("org.jetbrains.kotlin.plugin.serialization") version "1.9.10"
     id("com.google.devtools.ksp")
+
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -52,6 +54,13 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.cardview)
+    implementation(libs.firebase.messaging.ktx)
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.firebase.firestore.ktx)
+    implementation(libs.firebase.messaging)
+    implementation(libs.androidx.runtime.livedata)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -80,4 +89,22 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
+
+    implementation(libs.androidx.material.icons.extended)
+
+    implementation(platform("com.google.firebase:firebase-bom:33.8.0"))
+
+    implementation("com.google.firebase:firebase-analytics")
+
+    implementation (libs.androidx.runtime.livedata)
+
+//    // Import the Firebase BoM
+//    implementation(platform("com.google.firebase:firebase-bom:33.8.0"))
+//
+//    // TODO: Add the dependencies for Firebase products you want to use
+//    // When using the BoM, don't specify versions in Firebase dependencies
+//    implementation("com.google.firebase:firebase-analytics")
+//
+//    // Add the dependencies for any other desired Firebase products
+//    // https://firebase.google.com/docs/android/setup#available-libraries
 }
