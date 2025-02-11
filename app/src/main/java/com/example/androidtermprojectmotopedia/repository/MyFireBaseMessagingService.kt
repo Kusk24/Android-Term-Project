@@ -8,6 +8,8 @@ import android.media.RingtoneManager
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import androidx.work.Worker
@@ -16,6 +18,7 @@ import com.example.androidtermprojectmotopedia.MainActivity
 import com.example.androidtermprojectmotopedia.R
 import com.example.androidtermprojectmotopedia.dao.NotificationDatabase
 import com.example.androidtermprojectmotopedia.model.Notification
+import com.example.androidtermprojectmotopedia.viewModel.NotificationViewModel
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import kotlinx.coroutines.CoroutineScope
@@ -41,16 +44,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             var title: String = ""
             var body: String = ""
             var imageURL: String = ""
-            
-//            it.title.let{
-//                title = {it.title}
-//            }
-//            it.body.let{
-//                body = {it.body}
-//            }
-//            it.imageUrl{
-//                imageURL: String
-//            }
 
             it.body?.let { it1 -> it.title?.let { it2 -> saveMessageToDatabase(it2, it1,
                 it.imageUrl.toString()
@@ -66,10 +59,12 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     private fun saveMessageToDatabase(title: String, body: String, imageURL: String = "") {
-        val database = NotificationDatabase.getInstance(applicationContext)
+//        val database = NotificationDatabase.getInstance(applicationContext)
+        val viewModel : NotificationViewModel = NotificationViewModel(application)
+
         CoroutineScope(Dispatchers.IO).launch {
             val notification = Notification(title = title, body = body, imageUrl = imageURL)
-            database.notificationDao().addNotification(notification)
+            viewModel.addMessages(notification)
             Log.d(TAG, "Message saved to database: $notification")
         }
     }

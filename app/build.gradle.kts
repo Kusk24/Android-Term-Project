@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.firebase.firestore.ktx)
     implementation(libs.firebase.messaging)
+    implementation(libs.androidx.runtime.livedata)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -95,6 +96,7 @@ dependencies {
 
     implementation("com.google.firebase:firebase-analytics")
 
+    implementation (libs.androidx.runtime.livedata)
 
 //    // Import the Firebase BoM
 //    implementation(platform("com.google.firebase:firebase-bom:33.8.0"))

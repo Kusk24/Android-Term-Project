@@ -10,6 +10,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -18,16 +19,16 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.example.androidtermprojectmotopedia.model.Notification
 import com.example.androidtermprojectmotopedia.viewModel.NotificationViewModel
+import androidx.compose.runtime.livedata.observeAsState
 
 @Composable
 fun NotificationScreen(modifier: Modifier) {
 
     val viewModel : NotificationViewModel = viewModel()
-    val notificationlists = viewModel.notification.collectAsState().value
+    val notificationlists = viewModel.liveNotification.observeAsState().value
 
-
-        LazyColumn(modifier = Modifier.padding(start = 16.dp, end = 16.dp,top = 100.dp)) {
-            items(notificationlists) { notification ->
+    LazyColumn(modifier = Modifier.padding(start = 16.dp, end = 16.dp,top = 100.dp)) {
+        items(notificationlists.orEmpty()) { notification ->
                 Noticiation(notification)
 
                 HorizontalDivider(thickness = 1.dp)
