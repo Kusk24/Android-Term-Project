@@ -34,7 +34,7 @@ fun AppToolbar(title: String,
         },
         title = { Text(title) },
         actions = {
-            IconButton(onClick = { /* TODO: Add action */ }) {
+            IconButton(onClick = {  }) {
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = "Search",

@@ -257,6 +257,7 @@ fun DetailedDrawerExample(
                 "Home" -> LoginPage(
                     modifier = Modifier.padding(innerPadding)
                 )
+                "Search" -> SearchScreen(modifier = Modifier.padding(innerPadding), onMotorcycleClicked = {})
 
                 "Settings" -> SettingScreen(modifier = Modifier.padding(innerPadding))
 

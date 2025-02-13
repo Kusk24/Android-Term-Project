@@ -90,6 +90,10 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 
+    implementation(libs.androidx.adaptive)
+    implementation(libs.androidx.adaptive.layout)
+    implementation(libs.androidx.adaptive.navigation)
+
     implementation(libs.androidx.material.icons.extended)
 
     implementation(platform("com.google.firebase:firebase-bom:33.8.0"))
