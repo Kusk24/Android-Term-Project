@@ -266,6 +266,8 @@ fun DetailedDrawerExample(
                 "Saved" -> SavedScreen(modifier = Modifier.padding(innerPadding))
 
                 "Notification" -> NotificationScreen(modifier = Modifier.padding(innerPadding))
+
+                "Upload" -> UploadScreen(modifier = Modifier.padding(innerPadding))
             }
 //            content(innerPadding)
         }
