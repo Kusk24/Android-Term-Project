@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
 import com.example.androidtermprojectmotopedia.ui.theme.AndroidTermProjectMotopediaTheme
 import com.example.androidtermprojectmotopedia.view.HomeScreen
+import com.example.androidtermprojectmotopedia.view.MainAppScreen
 import com.google.firebase.messaging.ktx.messaging
 import com.google.firebase.ktx.Firebase
 
@@ -40,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         setContent {
             AndroidTermProjectMotopediaTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    HomeScreen(modifier = Modifier.padding(innerPadding))
+                    MainAppScreen(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
