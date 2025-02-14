@@ -18,7 +18,8 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 
 @Composable
-fun LoginPage(modifier : Modifier) {
+fun LoginPage(modifier: Modifier, LoginButtonClicked: (String) -> Unit) {
+
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
 
         val (item1, item2, item3, item4) = createRefs()
@@ -59,7 +60,7 @@ fun LoginPage(modifier : Modifier) {
             }
         )
 
-        Button(onClick = {  }, modifier = Modifier
+        Button(onClick = { LoginButtonClicked(email) }, modifier = Modifier
             .constrainAs(item3) {
                 top.linkTo(line1, 20.dp)
                 start.linkTo(parent.start)
