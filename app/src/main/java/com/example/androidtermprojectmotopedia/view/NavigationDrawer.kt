@@ -19,9 +19,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Help
 import androidx.compose.material.icons.filled.Bookmarks
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.DrawerValue
@@ -122,6 +124,16 @@ fun DetailedDrawer(
                         icon = { Icon(Icons.Default.Search, contentDescription = null)},
                         onClick = {
                             selectedItem = "Search"
+                            scope.launch {drawerState.close()}
+                        }
+                    )
+
+                    NavigationDrawerItem(
+                        label = {Text("Explore Brands")},
+                        selected = false,
+                        icon = {Icon(Icons.Default.Map , contentDescription = null)},
+                        onClick  = {
+                            selectedItem = "Brands"
                             scope.launch {drawerState.close()}
                         }
                     )
@@ -247,19 +259,25 @@ fun DetailedDrawer(
 //                    LoginButtonClicked = {
 //
 //                    }
-//                )
+//
+//                "Home" -> MotorcycleListDetailPane(modifier = Modifier.padding(innerPadding))
+                "Home" -> BrandScreen(modifier = Modifier.padding(innerPadding))
 
                 "Search" -> SearchScreen(modifier = Modifier.padding(innerPadding), onMotorcycleClicked = {})
 
-                "Settings" -> SettingScreen(modifier = Modifier.padding(innerPadding))
+                "Brands" -> BrandScreen(modifier = Modifier.padding(innerPadding))
 
-                "Profile" -> ProfileScreen(modifier = Modifier.padding(innerPadding))
-
-                "Saved" -> SavedScreen(modifier = Modifier.padding(innerPadding))
+                "Upload" -> UploadScreen(modifier = Modifier.padding(innerPadding))
 
                 "Notification" -> NotificationScreen(modifier = Modifier.padding(innerPadding))
 
-                "Upload" -> UploadScreen(modifier = Modifier.padding(innerPadding))
+                "Saved" -> SavedScreen(modifier = Modifier.padding(innerPadding))
+
+                "Profile" -> ProfileScreen(modifier = Modifier.padding(innerPadding))
+
+                "Settings" -> SettingScreen(modifier = Modifier.padding(innerPadding))
+
+
             }
 //            content(innerPadding)
         }
@@ -272,7 +290,7 @@ public val OurFirebaseMessaging = MyFirebaseMessagingService()
 fun HomeScreen(modifier : Modifier) {
     DetailedDrawer { paddingValues ->
 //        OurFirebaseMessaging.fetchFCMToken()
-        LoginPage(modifier = Modifier.padding(paddingValues), LoginButtonClicked = {
+        LoginPage(modifier = modifier.padding(paddingValues), LoginButtonClicked = {
 
         })
     }

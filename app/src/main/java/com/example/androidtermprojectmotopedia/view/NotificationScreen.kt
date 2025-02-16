@@ -27,7 +27,7 @@ fun NotificationScreen(modifier: Modifier) {
     val viewModel : NotificationViewModel = viewModel()
     val notificationlists = viewModel.liveNotification.observeAsState().value
 
-    LazyColumn(modifier = Modifier.padding(start = 16.dp, end = 16.dp,top = 100.dp)) {
+    LazyColumn(modifier = modifier.padding(start = 16.dp, end = 16.dp,top = 100.dp)) {
         items(notificationlists.orEmpty()) { notification ->
                 Noticiation(notification)
 
@@ -62,37 +62,37 @@ fun Noticiation(notification: Notification){
     }
 }
 
-val demoNotifications = listOf(
-    Notification(title = "Notification #1",
-        body = "This is the body of notification #1.",
-        imageUrl = "Demo reason 1 URL"),
-
-    Notification(title = "Notification #2",
-        body = "This is the body of notification #2.",
-        imageUrl = "Demo reason 2 URL "),
-
-    Notification(title = "Notification #3",
-        body = "This is the body of notification #3.",
-        imageUrl = "Demo reason 3 URL"),
-
-    Notification(title = "Notification #4",
-        body = "This is the body of notification #4.",
-        imageUrl = "Demo reason 4 URL"),
-
-    Notification(title = "Notification #5",
-        body = "This is the body of notification #5.",
-        imageUrl = "Demo reason 5 URL"),
-
-    Notification(title = "Notification #6",
-        body = "This is the body of notification #6.",
-        imageUrl = "Demo reason 6 URL"),
-
-    Notification(title = "Notification #7",
-        body = "This is the body of notification #7.",
-        imageUrl = "Demo reason 7 URL"),
-
-    Notification(title = "Notification #8",
-        body = "This is the body of notification #8.",
-        imageUrl = "Demo reason 8 URL")
-    // … and so on
-)
+//val demoNotifications = listOf(
+//    Notification(title = "Notification #1",
+//        body = "This is the body of notification #1.",
+//        imageUrl = "Demo reason 1 URL"),
+//
+//    Notification(title = "Notification #2",
+//        body = "This is the body of notification #2.",
+//        imageUrl = "Demo reason 2 URL "),
+//
+//    Notification(title = "Notification #3",
+//        body = "This is the body of notification #3.",
+//        imageUrl = "Demo reason 3 URL"),
+//
+//    Notification(title = "Notification #4",
+//        body = "This is the body of notification #4.",
+//        imageUrl = "Demo reason 4 URL"),
+//
+//    Notification(title = "Notification #5",
+//        body = "This is the body of notification #5.",
+//        imageUrl = "Demo reason 5 URL"),
+//
+//    Notification(title = "Notification #6",
+//        body = "This is the body of notification #6.",
+//        imageUrl = "Demo reason 6 URL"),
+//
+//    Notification(title = "Notification #7",
+//        body = "This is the body of notification #7.",
+//        imageUrl = "Demo reason 7 URL"),
+//
+//    Notification(title = "Notification #8",
+//        body = "This is the body of notification #8.",
+//        imageUrl = "Demo reason 8 URL")
+//    // … and so on
+//)

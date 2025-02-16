@@ -27,6 +27,7 @@ fun MainAppScreen(modifier: Modifier){
             arguments = listOf(navArgument("email")
             {type = NavType.StringType})) {  backstackEntry ->
             val email = backstackEntry.arguments?.getString("email") ?: ""
+
             HomeScreen(modifier = Modifier)
         }
 
