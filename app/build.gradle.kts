@@ -7,6 +7,8 @@ plugins {
     id("com.google.devtools.ksp")
 
     id("com.google.gms.google-services")
+
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -102,6 +104,10 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
 
     implementation (libs.androidx.runtime.livedata)
+
+    implementation ("com.google.android.gms:play-services-maps:19.0.0")
+
+    implementation("com.google.maps.android:maps-compose:2.11.4")
 
 //    // Import the Firebase BoM
 //    implementation(platform("com.google.firebase:firebase-bom:33.8.0"))

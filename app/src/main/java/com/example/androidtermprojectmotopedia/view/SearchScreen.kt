@@ -38,7 +38,8 @@ fun SearchScreen(
     var currentPage by remember { mutableStateOf(0) } // Track the current page
     var searchQuery by remember { mutableStateOf("") } // User's search query
 
-    val allMotorcycles = demoBrands.flatMap { it.models } // Flatten all motorcycles
+//    val allMotorcycles = demoMotor.flatMap { it.models } // Flatten all motorcycles
+    val allMotorcycles = demoMotor
     val filteredMotorcycles = allMotorcycles.filter {
         it.name.contains(searchQuery, ignoreCase = true)
     }
