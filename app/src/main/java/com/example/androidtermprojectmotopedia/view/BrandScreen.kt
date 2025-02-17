@@ -1,5 +1,6 @@
 package com.example.androidtermprojectmotopedia.view
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -57,6 +59,10 @@ fun BrandScreen(modifier : Modifier){
     val brandViewModel : BrandViewModel = viewModel()
     val brandList = brandViewModel.brands.collectAsState().value
 
+    BackHandler(brandNavigator.canNavigateBack()) {
+        brandNavigator.navigateBack()
+    }
+
     ListDetailPaneScaffold(
         directive = brandNavigator.scaffoldDirective,
         value = brandNavigator.scaffoldValue,
@@ -95,11 +101,11 @@ private fun ThreePaneScaffoldScope.BrandListPane(
 fun BrandList(modifier: Modifier, onBrandClicked : (Brand) -> Unit, brandList: List<Brand>){
 
         Column(modifier = modifier.padding(16.dp)) {
-            Text(
-                text = "Motorcycle Brands",
-                fontWeight = FontWeight.Bold,
-                fontSize = 24.sp
-            )
+//            Text(
+//                text = "Motorcycle Brands",
+//                fontWeight = FontWeight.Bold,
+//                fontSize = 24.sp
+//            )
 
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
@@ -118,21 +124,25 @@ fun BrandList(modifier: Modifier, onBrandClicked : (Brand) -> Unit, brandList: L
                     ) {
                         Column(
                             modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            AsyncImage(model = brand.logo,
+                            AsyncImage(
+                                model = brand.logo,
                                 contentDescription = null,
-                                modifier = modifier
-                                    .weight(1f)
-                                    .fillMaxSize(),
-                                contentScale = ContentScale.Fit,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .aspectRatio(1f)
+                                    .weight(1f),
+                                contentScale = ContentScale.Fit
                             )
                             Text(
                                 text = brand.brand,
-                                modifier = modifier
-                                    .padding(start = 16.dp, end = 16.dp)
+                                modifier = Modifier
                                     .fillMaxWidth()
-                                    .wrapContentWidth(Alignment.CenterHorizontally)
-                                    , fontWeight = FontWeight.SemiBold
+                                    .padding(8.dp)
+                                    .wrapContentWidth(Alignment.CenterHorizontally),
+                                fontWeight = FontWeight.SemiBold
                             )
                         }
                     }
@@ -151,29 +161,40 @@ private fun ThreePaneScaffoldScope.BrandDetailPane(
 
     AnimatedPane {
             if (brand != null) {
-                BrandDetailScreen(brand, modifier)
+                BrandDetailScreen(brand)
             }
 
     }
 }
 
 @Composable
-fun BrandDetailScreen(brand: Brand, modifier: Modifier) {
+fun BrandDetailScreen(brand: Brand) {
 
     val scrollState = rememberScrollState()
 
-        Column(modifier = modifier.verticalScroll(scrollState).padding(16.dp)){
+    Column(modifier = Modifier
+        .verticalScroll(scrollState)
+        .padding(start = 16.dp, top = 100.dp, end = 16.dp, bottom = 16.dp)){
 
         AsyncImage(model = brand.logo,
-            contentDescription = null)
+            contentDescription = null, modifier = Modifier.height(250.dp).fillMaxWidth().wrapContentSize(Alignment.Center))
 
-        Text(brand.brand)
+        Card(modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.CenterHorizontally).padding(vertical = 20.dp)) {
+            Text(brand.brand, fontWeight = FontWeight.SemiBold, fontSize = 30.sp)
+        }
 
-        Text("founded by ${brand.founded}")
+        Card(modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.Start).padding(vertical = 10.dp)) {
+            Text("Founded by ${brand.founder} at ${brand.founded}")
+        }
 
-        Text(brand.headquarters)
 
-        Text(brand.detail)
+        Card(modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.Start).padding(vertical = 10.dp)) {
+            Text("Headquarter : ${brand.headquarters}")
+        }
+
+        Card(modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.Start).padding(vertical = 10.dp)) {
+            Text(brand.detail, fontSize = 14.sp)
+        }
 
         GoogleMapScreen(
             brand.stores
@@ -233,55 +254,3 @@ fun BrandDetailScreen(brand: Brand, modifier: Modifier) {
 //                bottom.linkTo(item6.bottom)
 //            }
 //    )
-
-
-//@Composable
-//fun BrandList(modifier: Modifier, onBrandClicked: (Brand) -> Unit) {
-//    Column(modifier = modifier.padding(16.dp)) {
-//        Text(
-//            text = "Motorcycle Brands",
-//            fontWeight = FontWeight.Bold,
-//            fontSize = 24.sp
-//        )
-//
-//        LazyVerticalGrid(
-//            columns = GridCells.Fixed(2),
-//            modifier = Modifier.fillMaxSize(),
-//            contentPadding = PaddingValues(8.dp),
-//            verticalArrangement = Arrangement.spacedBy(16.dp),
-//            horizontalArrangement = Arrangement.spacedBy(16.dp)
-//        ) {
-//            items(demoBrands) { brand ->
-//                Card(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .aspectRatio(1f)
-//                        .clickable { onBrandClicked(brand) },
-//                ) {
-//                    Box(
-//                        modifier = Modifier.fillMaxSize(),
-//                        contentAlignment = Alignment.Center
-//                    ) {
-//                        Text(
-//                            text = brand.name
-//                        )
-//                    }
-//                }
-//            }
-//        }
-//    }
-
-//@Composable
-//@OptIn(ExperimentalMaterial3AdaptiveApi::class)
-//private fun ThreePaneScaffoldScope.BrandListPane(
-//    navigator: ThreePaneScaffoldNavigator<Brand>,
-//    modifier: Modifier
-//) {
-//
-//    AnimatedPane {
-//        BrandList(modifier, onBrandClicked = { brand ->
-//            navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, brand)
-//        })
-//    }
-//
-//}

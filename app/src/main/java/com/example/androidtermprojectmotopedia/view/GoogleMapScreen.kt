@@ -3,9 +3,12 @@ package com.example.androidtermprojectmotopedia.view
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.androidtermprojectmotopedia.model.Store
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -22,6 +25,8 @@ fun GoogleMapScreen(storeList : List<Store>) {
     val cameraPositionState = rememberCameraPositionState(){
         position = CameraPosition.fromLatLngZoom(thailand, 12f)
     }
+
+    Text("Store Location in Thailand", fontSize = 24.sp, fontWeight = FontWeight.Medium)
 
     GoogleMap(
         modifier = Modifier.fillMaxWidth().height(700.dp),
