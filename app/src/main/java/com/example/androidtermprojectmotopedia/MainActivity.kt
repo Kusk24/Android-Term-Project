@@ -15,7 +15,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
+import com.example.androidtermprojectmotopedia.model.Brand
 import com.example.androidtermprojectmotopedia.ui.theme.AndroidTermProjectMotopediaTheme
+import com.example.androidtermprojectmotopedia.view.BrandScreen
 import com.example.androidtermprojectmotopedia.view.HomeScreen
 import com.example.androidtermprojectmotopedia.view.MainAppScreen
 import com.google.firebase.messaging.ktx.messaging
@@ -42,6 +44,7 @@ class MainActivity : AppCompatActivity() {
             AndroidTermProjectMotopediaTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     MainAppScreen(modifier = Modifier.padding(innerPadding))
+//                    BrandScreen(modifier = Modifier.padding(innerPadding))
                 }
             }
         }

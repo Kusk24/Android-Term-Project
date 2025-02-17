@@ -27,7 +27,7 @@ fun NotificationScreen(modifier: Modifier) {
     val viewModel : NotificationViewModel = viewModel()
     val notificationlists = viewModel.liveNotification.observeAsState().value
 
-    LazyColumn(modifier = modifier.padding(start = 16.dp, end = 16.dp,top = 100.dp)) {
+    LazyColumn(modifier = modifier.padding(start = 16.dp, end = 16.dp,top = 16.dp)) {
         items(notificationlists.orEmpty()) { notification ->
                 Noticiation(notification)
 
