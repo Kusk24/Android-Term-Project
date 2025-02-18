@@ -17,7 +17,8 @@ import androidx.compose.runtime.Composable
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppToolbar(title: String,
-               onNavigationClick: () -> Unit) {
+               onNavigationClick: () -> Unit, searchButtonClick: () -> Unit,
+               settingButtonClick: () -> Unit) {
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary,
@@ -34,14 +35,18 @@ fun AppToolbar(title: String,
         },
         title = { Text(title) },
         actions = {
-            IconButton(onClick = {  }) {
+            IconButton(onClick = {
+                searchButtonClick()
+            }) {
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = "Search",
                     tint = MaterialTheme.colorScheme.onPrimary
                 )
             }
-            IconButton( onClick = { /* TODO: ADD ACTION */} ) {
+            IconButton( onClick = {
+                settingButtonClick()
+            } ) {
                 Icon(
                     imageVector = Icons.Default.Settings,
                     contentDescription = "Setting",
