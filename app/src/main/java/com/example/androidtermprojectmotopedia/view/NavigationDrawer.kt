@@ -235,6 +235,12 @@ fun DetailedDrawer(
                                 drawerState.close()
                             }
                         }
+                    },
+                    searchButtonClick = {
+                        selectedItem = "Search"
+                    },
+                    settingButtonClick = {
+                        selectedItem = "Settings"
                     }
 //                    navigationIcon = {
 //                        IconButton(onClick = {
@@ -284,7 +290,7 @@ fun DetailedDrawer(
     }
 }
 
-public val OurFirebaseMessaging = MyFirebaseMessagingService()
+//public val OurFirebaseMessaging = MyFirebaseMessagingService()
 
 @Composable
 fun HomeScreen(modifier : Modifier) {
