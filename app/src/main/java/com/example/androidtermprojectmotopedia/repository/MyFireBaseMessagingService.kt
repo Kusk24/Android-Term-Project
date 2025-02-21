@@ -41,9 +41,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         remoteMessage.notification?.let {
             Log.d(TAG, "Message Notification Body: ${it.body}")
-            var title: String = ""
-            var body: String = ""
-            var imageURL: String = ""
 
             it.body?.let { it1 -> it.title?.let { it2 -> saveMessageToDatabase(it2, it1,
                 it.imageUrl.toString()

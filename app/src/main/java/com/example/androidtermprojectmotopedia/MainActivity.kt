@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun subscribeTopics() {
-        Firebase.messaging.subscribeToTopic("Cat")
+        Firebase.messaging.subscribeToTopic("New Released")
             .addOnCompleteListener { task ->
                 val msg = if (task.isSuccessful) "Subscribed to New Released topic" else "Subscription failed"
                 Log.d("MainActivity", msg)
