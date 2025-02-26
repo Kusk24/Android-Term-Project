@@ -19,6 +19,8 @@ class UserPreferencesRepository(private val context: Context) {
 
     private val NOTIPERMISSION = booleanPreferencesKey("NOTIPERMISSION")
 
+    private val CURRENT_USER = stringPreferencesKey("CURRENT_USER")
+
     val isLoggedIn: Flow<Boolean> = context.dataStore.data.map { preferences ->
         preferences[IS_LOGGED_IN] ?: false
     }
@@ -33,6 +35,10 @@ class UserPreferencesRepository(private val context: Context) {
 
     val notiPermission: Flow<Boolean> = context.dataStore.data.map { preferences ->
         preferences[NOTIPERMISSION] ?: false
+    }
+
+    val currentUser: Flow<String> = context.dataStore.data.map { preferences ->
+        preferences[CURRENT_USER] ?: ""
     }
 
     suspend fun setLoggedIn(isLoggedIn: Boolean){
@@ -56,6 +62,12 @@ class UserPreferencesRepository(private val context: Context) {
     suspend fun setNotiPermission(notiPermission: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[NOTIPERMISSION] = notiPermission
+        }
+    }
+
+    suspend fun setCurrentUser(currentUser : String) {
+        context.dataStore.edit { preferences ->
+            preferences[CURRENT_USER] = currentUser
         }
     }
 

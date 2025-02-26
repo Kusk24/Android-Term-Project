@@ -17,6 +17,8 @@ class UserPreferencesViewModel(private val userPreferencesRepository: UserPrefer
 
     val notiPermission = userPreferencesRepository.notiPermission.asLiveData()
 
+    val currentUser = userPreferencesRepository.currentUser.asLiveData()
+
     fun setLoggedIn(isLoggedIn: Boolean){
         viewModelScope.launch{
             userPreferencesRepository.setLoggedIn(isLoggedIn)
@@ -40,4 +42,12 @@ class UserPreferencesViewModel(private val userPreferencesRepository: UserPrefer
             userPreferencesRepository.setNotiPermission(notiPermission)
         }
     }
+
+    fun setCurrentUser(currentUser: String){
+        viewModelScope.launch{
+            userPreferencesRepository.setCurrentUser(currentUser)
+        }
+    }
+
+
 }
