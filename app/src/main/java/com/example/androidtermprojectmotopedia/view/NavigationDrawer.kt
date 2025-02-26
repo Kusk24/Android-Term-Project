@@ -1,6 +1,7 @@
 package com.example.androidtermprojectmotopedia.view
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -16,6 +17,7 @@ import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -38,10 +40,12 @@ fun DetailedDrawer(
 ) {
     val scope = rememberCoroutineScope()
     var selectedItem by remember { mutableStateOf("Home") }
-    var theme by remember { mutableStateOf(false) }
+    val currentTheme by userViewModel.darkTheme.observeAsState(false)
     var currentUser = userViewModel.currentUser.collectAsState().value
 
-    ModalDrawerSheet {
+    ModalDrawerSheet(
+        drawerContainerColor = (MaterialTheme.colorScheme.background)
+    ) {
         Column(
             modifier = Modifier
                 .padding(horizontal = 16.dp)
@@ -207,8 +211,9 @@ fun DetailedDrawer(
                         }
                 )
                 Switch(
-                    checked = theme,
-                    onCheckedChange = { theme = it },
+                    checked = currentTheme,
+                    onCheckedChange = { newValue ->
+                        userViewModel.setDarkTheme(newValue)},
                     modifier = Modifier
                         .wrapContentHeight(Alignment.Bottom)
                         .constrainAs(item2) {
