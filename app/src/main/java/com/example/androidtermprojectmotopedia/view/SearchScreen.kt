@@ -41,7 +41,7 @@ fun SearchScreen(
 //    val allMotorcycles = demoMotor.flatMap { it.models } // Flatten all motorcycles
     val allMotorcycles = demoMotor
     val filteredMotorcycles = allMotorcycles.filter {
-        it.name.contains(searchQuery, ignoreCase = true)
+        it.model.contains(searchQuery, ignoreCase = true)
     }
     val totalPages = (filteredMotorcycles.size + pageSize - 1) / pageSize
 
@@ -83,7 +83,7 @@ fun SearchScreen(
                         Spacer(modifier = Modifier.width(16.dp))
                         Text(
                             modifier = Modifier.align(Alignment.CenterVertically),
-                            text = motorcycle.name,
+                            text = motorcycle.model,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold
                         )

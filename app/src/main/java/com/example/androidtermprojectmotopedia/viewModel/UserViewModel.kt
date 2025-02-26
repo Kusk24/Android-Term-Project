@@ -119,6 +119,31 @@ class UserViewModel(
             }
         }
     }
+
+    // Updates the current user fields
+    fun updateUser(name: String, email: String, password: String) {
+        viewModelScope.launch {
+            _currentUser.value?.let { userWithId ->
+                val fields = mapOf(
+                    "name" to name,
+                    "email" to email,
+                    "password" to password
+                )
+                try {
+                    userRepository.updateUserFields(userWithId.docId, fields)
+                    // Optionally update the local state after a successful update
+                    _currentUser.value = UserWithId(userWithId.docId, userWithId.user.copy(
+                        name = name,
+                        email = email,
+                        password = password
+                    ))
+                    _errorMessage.value = null
+                } catch (e: Exception) {
+                    _errorMessage.value = "Update failed. Please try again."
+                }
+            }
+        }
+    }
 }
 
 class UserViewModelFactory(
