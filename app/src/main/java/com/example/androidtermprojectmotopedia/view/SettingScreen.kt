@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,99 +25,167 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.navigation.NavController
+import com.example.androidtermprojectmotopedia.viewModel.UserViewModel
 
 @Composable
-fun SettingScreen(modifier : Modifier){
+fun SettingScreen(
+    modifier: Modifier = Modifier,
+    navController: NavController,
+    userViewModel: UserViewModel
+) {
+    // Add a state to control showing the language dialog
+    var showLanguageDialog by remember { mutableStateOf(false) }
+    // Keep track of the current language (purely UI for now)
+    var currentLanguage by remember { mutableStateOf("English") }
 
     ConstraintLayout(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-
-        val (box1,box2,box3,box4,box5,box6) = createRefs()
-
+        val (box1, box2, box3, box4, box5, box6) = createRefs()
         var notificationChecked by remember { mutableStateOf(true) }
 
-
-        Row(modifier = Modifier
-            .clickable {  }.constrainAs(box1){
-            top.linkTo(parent.top, 100.dp)
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
-        }.border(1.dp, Color.Gray, RoundedCornerShape(15.dp)).height(50.dp).fillMaxWidth(),
+        // Row for "Account Information"
+        Row(
+            modifier = Modifier
+                .clickable {
+                    // Navigate to AccountInformationScreen
+                    navController.navigate("accountInfo")
+                }
+                .constrainAs(box1) {
+                    top.linkTo(parent.top, margin = 20.dp)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                }
+                .border(1.dp, Color.Gray, RoundedCornerShape(15.dp))
+                .height(50.dp)
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
-            verticalAlignment =  Alignment.CenterVertically){
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Text("Account Information")
         }
 
-        Row(modifier = Modifier.clickable {  }.constrainAs(box2){
-            top.linkTo(box1.bottom, 50.dp)
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
-        }.border(1.dp, Color.Gray, RoundedCornerShape(15.dp)).height(50.dp).fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment =  Alignment.CenterVertically){
-            Text("Language")
-        }
-
-        Row(modifier = Modifier.clickable {  }.constrainAs(box3){
-            top.linkTo(box2.bottom, 50.dp)
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
-        }.border(1.dp, Color.Gray, RoundedCornerShape(15.dp)).height(50.dp).fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment =  Alignment.CenterVertically){
-
-            ConstraintLayout (modifier = Modifier.fillMaxSize()) {
-
-                val (item1, item2) = createRefs()
-                Text("Notification",modifier = Modifier.constrainAs(item1){
+        // Row for "Language"
+        Row(
+            modifier = Modifier
+                .clickable {
+                    // Show the language dialog
+                    showLanguageDialog = true
+                }
+                .constrainAs(box2) {
+                    top.linkTo(box1.bottom, margin = 50.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
-                })
+                }
+                .border(1.dp, Color.Gray, RoundedCornerShape(15.dp))
+                .height(50.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text("Language: $currentLanguage")
+        }
 
-                Switch(checked = notificationChecked,
-                    onCheckedChange = {
-                        notificationChecked = it
-                    }, modifier = Modifier.constrainAs(item2){
-                        end.linkTo(parent.end, 16.dp)
-                    })
+        // Show the dialog if needed
+        if (showLanguageDialog) {
+            LanguageSelectionDialog(
+                currentLanguage = currentLanguage,
+                onDismiss = { showLanguageDialog = false },
+                onLanguageSelected = { chosenLang ->
+                    currentLanguage = chosenLang
+                    // TODO: Optionally store in DataStore or call ViewModel
+                }
+            )
+        }
+
+        // Row for "Notification"
+        Row(
+            modifier = Modifier
+                .clickable { /* ... */ }
+                .constrainAs(box3) {
+                    top.linkTo(box2.bottom, margin = 50.dp)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                }
+                .border(1.dp, Color.Gray, RoundedCornerShape(15.dp))
+                .height(50.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            ConstraintLayout(modifier = Modifier.fillMaxSize()) {
+                val (item1, item2) = createRefs()
+                Text(
+                    "Notification",
+                    modifier = Modifier.constrainAs(item1) {
+                        centerTo(parent)
+                    }
+                )
+                Switch(
+                    checked = notificationChecked,
+                    onCheckedChange = { notificationChecked = it },
+                    modifier = Modifier.constrainAs(item2) {
+                        end.linkTo(parent.end, margin = 16.dp)
+                        centerVerticallyTo(parent)
+                    }
+                )
             }
         }
 
-        Row(modifier = Modifier.clickable {  }.constrainAs(box4){
-            top.linkTo(box3.bottom, 50.dp)
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
-        }.border(1.dp, Color.Gray, RoundedCornerShape(15.dp)).height(50.dp).fillMaxWidth(),
+        // Row for "Help & Support"
+        Row(
+            modifier = Modifier
+                .clickable { /* ... */ }
+                .constrainAs(box4) {
+                    top.linkTo(box3.bottom, margin = 50.dp)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                }
+                .border(1.dp, Color.Gray, RoundedCornerShape(15.dp))
+                .height(50.dp)
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
-            verticalAlignment =  Alignment.CenterVertically){
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Text("Help & Support")
         }
 
-        Row(modifier = Modifier.clickable {  }.constrainAs(box5){
-            top.linkTo(box4.bottom, 50.dp)
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
-        }.border(1.dp, Color.Gray, RoundedCornerShape(15.dp)).height(50.dp).fillMaxWidth(),
+        // Row for "FAQs"
+        Row(
+            modifier = Modifier
+                .clickable { /* ... */ }
+                .constrainAs(box5) {
+                    top.linkTo(box4.bottom, margin = 50.dp)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                }
+                .border(1.dp, Color.Gray, RoundedCornerShape(15.dp))
+                .height(50.dp)
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
-            verticalAlignment =  Alignment.CenterVertically){
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Text("FAQs")
         }
-        
-        Button(onClick = {}, colors = ButtonColors(
-            contentColor = Color.Red,
-            containerColor = Color.Transparent,
-            disabledContainerColor = Color.Transparent,
-            disabledContentColor = Color.Red
-        ),border = BorderStroke(1.dp, Color.Red), modifier = Modifier.constrainAs(box6){
-            top.linkTo(box5.bottom, 50.dp)
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
-            bottom.linkTo(parent.bottom)
-        })
-        {
+
+        // Log out Button
+        Button(
+            onClick = {
+                // Just call logoutUser, which sets isLoggedIn = false
+                userViewModel.logoutUser()
+            },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Transparent,
+                contentColor = Color.Red
+            ),
+            border = BorderStroke(1.dp, Color.Red),
+            modifier = Modifier.constrainAs(box6) {
+                top.linkTo(box5.bottom, margin = 50.dp)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+                bottom.linkTo(parent.bottom)
+            }
+        ) {
             Text("Log out")
         }
-
     }
 }

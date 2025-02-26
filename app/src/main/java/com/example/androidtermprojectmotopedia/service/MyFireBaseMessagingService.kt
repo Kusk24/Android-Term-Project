@@ -1,4 +1,4 @@
-package com.example.androidtermprojectmotopedia.repository
+package com.example.androidtermprojectmotopedia.service
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -8,15 +8,12 @@ import android.media.RingtoneManager
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.example.androidtermprojectmotopedia.MainActivity
 import com.example.androidtermprojectmotopedia.R
-import com.example.androidtermprojectmotopedia.dao.NotificationDatabase
 import com.example.androidtermprojectmotopedia.model.Notification
 import com.example.androidtermprojectmotopedia.viewModel.NotificationViewModel
 import com.google.firebase.messaging.FirebaseMessagingService
@@ -41,9 +38,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         remoteMessage.notification?.let {
             Log.d(TAG, "Message Notification Body: ${it.body}")
-            var title: String = ""
-            var body: String = ""
-            var imageURL: String = ""
 
             it.body?.let { it1 -> it.title?.let { it2 -> saveMessageToDatabase(it2, it1,
                 it.imageUrl.toString()

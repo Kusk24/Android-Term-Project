@@ -93,6 +93,8 @@ fun UploadScreen(modifier : Modifier){
 
     var brand by remember { mutableStateOf("") }
 
+    var model by remember { mutableStateOf("")}
+
     var article by remember { mutableStateOf("")}
 
     val pickMedia = rememberLauncherForActivityResult(
@@ -117,13 +119,13 @@ fun UploadScreen(modifier : Modifier){
             .verticalScroll(scrollState)
     ) {
 
-        val (item1,item2,item3,item4,item5,item6) = createRefs()
+        val (item1,item2,item3,item4,item5,item6,item7) = createRefs()
 
         AsyncImage(model = selectedImage, contentDescription = null, modifier = Modifier.clickable {
             mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly
             pickMedia.launch(PickVisualMediaRequest(mediaType!!))
         }.constrainAs(item1){
-            top.linkTo(parent.top, 100.dp)
+            top.linkTo(parent.top, 20.dp)
             start.linkTo(parent.start)
             end.linkTo(parent.end)
         }.height(200.dp).border(1.dp, Color.Black, shape = RoundedCornerShape(corner = CornerSize(15.dp),)))
@@ -136,10 +138,19 @@ fun UploadScreen(modifier : Modifier){
             end.linkTo(parent.end)
         }, label = {Text("Brand")})
 
+        TextField(onValueChange = {
+            model = it
+        }, value = model, modifier = Modifier.constrainAs(item7){
+            top.linkTo(item2.bottom, 20.dp)
+            start.linkTo(parent.start)
+            end.linkTo(parent.end)
+        }, label = {Text("Model")})
+
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.constrainAs(item3) {
-            top.linkTo(item2.bottom, 20.dp)
+            top.linkTo(item7.bottom, 20.dp)
             start.linkTo(parent.start)
             end.linkTo(parent.end)}
         ) {
@@ -170,7 +181,6 @@ fun UploadScreen(modifier : Modifier){
         }.height(200.dp).border(1.dp, Color.Black, shape = RoundedCornerShape(corner = CornerSize(15.dp),)))
 
 
-
         if (showModalInput) {
             DatePickerModalInput(
                 onDateSelected = {
@@ -189,7 +199,9 @@ fun UploadScreen(modifier : Modifier){
             top.linkTo(item4.bottom,20.dp)
             start.linkTo(parent.start)
             end.linkTo(parent.end)
-        }.size(300.dp))
+        }.size(300.dp), label = {
+            Text("Article")
+        })
 
         Button(onClick = {}, colors = ButtonDefaults.buttonColors(Color.Green), modifier = Modifier.constrainAs(item6){
             top.linkTo(item5.bottom, 20.dp)

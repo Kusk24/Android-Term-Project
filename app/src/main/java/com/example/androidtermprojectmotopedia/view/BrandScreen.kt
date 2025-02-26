@@ -50,6 +50,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.example.androidtermprojectmotopedia.model.Brand
+import com.example.androidtermprojectmotopedia.ui.theme.SoftBeige
+import com.example.androidtermprojectmotopedia.ui.theme.SoftDark
 import com.example.androidtermprojectmotopedia.viewModel.BrandViewModel
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
@@ -120,7 +122,7 @@ fun BrandList(modifier: Modifier, onBrandClicked : (Brand) -> Unit, brandList: L
                             .fillMaxWidth()
                             .aspectRatio(1f)
                             .clickable { onBrandClicked(brand) },
-                        colors = CardDefaults.cardColors(containerColor = Color.White)
+//                        colors = CardDefaults.cardColors(containerColor = Color.White)
                     ) {
                         Column(
                             modifier = Modifier.fillMaxSize(),

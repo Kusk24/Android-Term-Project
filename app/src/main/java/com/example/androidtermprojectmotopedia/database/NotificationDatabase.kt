@@ -1,9 +1,10 @@
-package com.example.androidtermprojectmotopedia.dao
+package com.example.androidtermprojectmotopedia.database
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.androidtermprojectmotopedia.dao.NotificationDao
 import com.example.androidtermprojectmotopedia.model.Notification
 
 @Database(entities = [Notification::class], version = 1, exportSchema = false)
