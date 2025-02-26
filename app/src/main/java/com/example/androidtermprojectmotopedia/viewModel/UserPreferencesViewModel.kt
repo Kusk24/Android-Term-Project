@@ -49,5 +49,4 @@ class UserPreferencesViewModel(private val userPreferencesRepository: UserPrefer
         }
     }
 
-
 }
