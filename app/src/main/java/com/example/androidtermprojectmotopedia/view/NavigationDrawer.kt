@@ -21,11 +21,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
+import com.example.androidtermprojectmotopedia.R
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -75,7 +77,7 @@ fun DetailedDrawer(
             Spacer(Modifier.height(12.dp))
 
             Text(
-                "Profile Name",
+                text = stringResource(id = R.string.profile_name),
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentWidth(Alignment.CenterHorizontally),
@@ -88,13 +90,13 @@ fun DetailedDrawer(
 
             // "Uses" Section
             Text(
-                "Uses",
+                text = stringResource(id = R.string.uses),
                 modifier = Modifier.padding(16.dp),
                 style = MaterialTheme.typography.titleMedium
             )
 
             NavigationDrawerItem(
-                label = { Text("Home") },
+                label = { Text(text = stringResource(id = R.string.home)) },
                 selected = selectedItem == "Home",
                 icon = { Icon(Icons.Default.Home, contentDescription = null) },
                 onClick = {
@@ -105,7 +107,7 @@ fun DetailedDrawer(
                 }
             )
             NavigationDrawerItem(
-                label = { Text("Search") },
+                label = { Text(text = stringResource(id = R.string.search)) },
                 selected = selectedItem == "Search",
                 icon = { Icon(Icons.Default.Search, contentDescription = null) },
                 onClick = {
@@ -115,7 +117,7 @@ fun DetailedDrawer(
                 }
             )
             NavigationDrawerItem(
-                label = { Text("Explore Brands") },
+                label = { Text(text = stringResource(id = R.string.explore_brand)) },
                 selected = selectedItem == "Brands",
                 icon = { Icon(Icons.Default.Map, contentDescription = null) },
                 onClick = {
@@ -125,7 +127,7 @@ fun DetailedDrawer(
                 }
             )
             NavigationDrawerItem(
-                label = { Text("Upload") },
+                label = { Text(text = stringResource(id = R.string.upload)) },
                 selected = selectedItem == "Upload",
                 icon = { Icon(Icons.Default.Upload, contentDescription = null) },
                 onClick = {
@@ -135,7 +137,7 @@ fun DetailedDrawer(
                 }
             )
             NavigationDrawerItem(
-                label = { Text("Notification") },
+                label = { Text(text = stringResource(id = R.string.notification)) },
                 selected = selectedItem == "Notification",
                 icon = { Icon(Icons.Default.Notifications, contentDescription = null) },
                 onClick = {
@@ -145,7 +147,7 @@ fun DetailedDrawer(
                 }
             )
             NavigationDrawerItem(
-                label = { Text("Saved") },
+                label = { Text(text = stringResource(id = R.string.saved)) },
                 selected = selectedItem == "Saved",
                 icon = { Icon(Icons.Default.Bookmarks, contentDescription = null) },
                 onClick = {
@@ -159,13 +161,13 @@ fun DetailedDrawer(
 
             // "Management" Section
             Text(
-                "Management",
+                text = stringResource(id = R.string.management),
                 modifier = Modifier.padding(16.dp),
                 style = MaterialTheme.typography.titleMedium
             )
 
             NavigationDrawerItem(
-                label = { Text("Profile") },
+                label = { Text(text = stringResource(id = R.string.profile)) },
                 selected = selectedItem == "Profile",
                 icon = { Icon(Icons.Default.Person, contentDescription = null) },
                 onClick = {
@@ -175,7 +177,7 @@ fun DetailedDrawer(
                 }
             )
             NavigationDrawerItem(
-                label = { Text("Settings") },
+                label = { Text(text = stringResource(id = R.string.settings)) },
                 selected = selectedItem == "Settings",
                 icon = { Icon(Icons.Outlined.Settings, contentDescription = null) },
                 onClick = {
@@ -185,7 +187,7 @@ fun DetailedDrawer(
                 }
             )
             NavigationDrawerItem(
-                label = { Text("Help and feedback") },
+                label = { Text(text = stringResource(id = R.string.help_and_feedback)) },
                 selected = false,
                 icon = { Icon(Icons.AutoMirrored.Outlined.Help, contentDescription = null) },
                 onClick = {
@@ -203,7 +205,7 @@ fun DetailedDrawer(
             ) {
                 val (item1, item2) = createRefs()
                 Text(
-                    "Theme",
+                    text = stringResource(id = R.string.theme),
                     modifier = Modifier
                         .wrapContentWidth(Alignment.Start)
                         .constrainAs(item1) {

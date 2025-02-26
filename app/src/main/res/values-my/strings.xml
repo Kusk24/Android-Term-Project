@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Android Term Project (Motopedia)</string>
+    <string name="profile_name">ပရီုဖိုင် နာမည်</string>
+    <string name="uses">အသုံးပြုမှု</string>
+    <string name="home">အိမ်</string>
+    <string name="search">ရှာရန်</string>
+    <string name="explore_brand">ဘရန်းများ လေ့လာရန်</string>
+    <string name="upload">တင်ရန်</string>
+    <string name="notification">အသိပေးချက်</string>
+    <string name="saved">စုဆောင်းမှု</string>
+    <string name="management">စီမံခန့်ခွဲမှု</string>
+    <string name="profile">ပရိုဖိုင်</string>
+    <string name="settings">ဆက်တင်များ</string>
+    <string name="help_and_feedback">အကူအညီနှင့် အကြံပြုချက်</string>
+    <string name="theme">အပြင်အဆင်</string>
+    <string name="account_info">အကောင့်အချက်အလက်</string>
+    <string name="help_and_support"><![CDATA[အကူအညီနှင့် ထောက်ပံ့မှုများ]]></string>
+    <string name="faqs">အမြဲမေးလေ့ရှိသောမေးခွန်းများ</string>
+    <string name="sign_out">ဆိုင်းအောက်</string>
+</resources>
