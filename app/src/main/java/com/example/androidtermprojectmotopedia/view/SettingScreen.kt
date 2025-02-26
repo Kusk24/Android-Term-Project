@@ -5,14 +5,22 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.HelpOutline
+import androidx.compose.material.icons.filled.Language
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.QuestionAnswer
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,12 +48,17 @@ fun SettingScreen(
     var showLanguageDialog by remember { mutableStateOf(false) }
     // Keep track of the current language (purely UI for now)
     var currentLanguage by remember { mutableStateOf("English") }
+    // Notification toggle
+    var notificationChecked by remember { mutableStateOf(true) }
 
-    ConstraintLayout(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+    ConstraintLayout(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
         val (box1, box2, box3, box4, box5, box6) = createRefs()
-        var notificationChecked by remember { mutableStateOf(true) }
 
-        // Row for "Account Information"
+        // 1) Row for "Account Information"
         Row(
             modifier = Modifier
                 .clickable {
@@ -59,14 +72,21 @@ fun SettingScreen(
                 }
                 .border(1.dp, Color.Gray, RoundedCornerShape(15.dp))
                 .height(50.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp), // Slight horizontal padding inside the row
+            horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            Icon(
+                imageVector = Icons.Filled.Person,
+                contentDescription = null,
+                tint = Color.Black
+            )
+            Spacer(modifier = Modifier.width(12.dp))
             Text(text = stringResource(id = R.string.account_info))
         }
 
-        // Row for "Language"
+        // 2) Row for "Language"
         Row(
             modifier = Modifier
                 .clickable {
@@ -80,14 +100,21 @@ fun SettingScreen(
                 }
                 .border(1.dp, Color.Gray, RoundedCornerShape(15.dp))
                 .height(50.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            Icon(
+                imageVector = Icons.Filled.Language,
+                contentDescription = null,
+                tint = Color.Black
+            )
+            Spacer(modifier = Modifier.width(12.dp))
             Text("Language: $currentLanguage")
         }
 
-        // Show the dialog if needed
+        // Show the language dialog if needed
         if (showLanguageDialog) {
             LanguageSelectionDialog(
                 currentLanguage = currentLanguage,
@@ -99,10 +126,10 @@ fun SettingScreen(
             )
         }
 
-        // Row for "Notification"
+        // 3) Row for "Notification"
         Row(
             modifier = Modifier
-                .clickable { /* ... */ }
+                .clickable { /* Could open a notification settings screen, if you want */ }
                 .constrainAs(box3) {
                     top.linkTo(box2.bottom, margin = 50.dp)
                     start.linkTo(parent.start)
@@ -110,30 +137,27 @@ fun SettingScreen(
                 }
                 .border(1.dp, Color.Gray, RoundedCornerShape(15.dp))
                 .height(50.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-                val (item1, item2) = createRefs()
-                Text(
-                    text = stringResource(id = R.string.notification),
-                    modifier = Modifier.constrainAs(item1) {
-                        centerTo(parent)
-                    }
-                )
-                Switch(
-                    checked = notificationChecked,
-                    onCheckedChange = { notificationChecked = it },
-                    modifier = Modifier.constrainAs(item2) {
-                        end.linkTo(parent.end, margin = 16.dp)
-                        centerVerticallyTo(parent)
-                    }
-                )
-            }
+            Icon(
+                imageVector = Icons.Filled.Notifications,
+                contentDescription = null,
+                tint = Color.Black
+            )
+            Spacer(modifier = Modifier.width(12.dp))
+            Text(text = stringResource(id = R.string.notification))
+            Spacer(modifier = Modifier.weight(1f))
+            // Switch aligned to the end
+            Switch(
+                checked = notificationChecked,
+                onCheckedChange = { notificationChecked = it }
+            )
         }
 
-        // Row for "Help & Support"
+        // 4) Row for "Help & Support"
         Row(
             modifier = Modifier
                 .clickable { /* ... */ }
@@ -144,14 +168,21 @@ fun SettingScreen(
                 }
                 .border(1.dp, Color.Gray, RoundedCornerShape(15.dp))
                 .height(50.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            Icon(
+                imageVector = Icons.Filled.HelpOutline,
+                contentDescription = null,
+                tint = Color.Black
+            )
+            Spacer(modifier = Modifier.width(12.dp))
             Text(text = stringResource(id = R.string.help_and_support))
         }
 
-        // Row for "FAQs"
+        // 5) Row for "FAQs"
         Row(
             modifier = Modifier
                 .clickable { /* ... */ }
@@ -162,14 +193,21 @@ fun SettingScreen(
                 }
                 .border(1.dp, Color.Gray, RoundedCornerShape(15.dp))
                 .height(50.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            Icon(
+                imageVector = Icons.Filled.QuestionAnswer,
+                contentDescription = null,
+                tint = Color.Black
+            )
+            Spacer(modifier = Modifier.width(12.dp))
             Text(text = stringResource(id = R.string.faqs))
         }
 
-        // Log out Button
+        // 6) Log out Button (no icon as requested)
         Button(
             onClick = {
                 // Just call logoutUser, which sets isLoggedIn = false
