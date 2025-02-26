@@ -1,34 +1,31 @@
 package com.example.androidtermprojectmotopedia.view
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.androidtermprojectmotopedia.viewModel.UserViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccountInformationScreen(
-    viewModel: UserViewModel, // Pass your viewModel instance
+    viewModel: UserViewModel,
+    onBackClick: () -> Unit,  // pass a callback that navigates back (e.g. navController.popBackStack())
     modifier: Modifier = Modifier
 ) {
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var showSuccessDialog by remember { mutableStateOf(false) }
 
-    // Optionally pre-fill fields with current user info if available
+    // Observe currentUser from the ViewModel
     val currentUser = viewModel.currentUser.collectAsState().value
     LaunchedEffect(currentUser) {
         currentUser?.let { userWithId ->
@@ -38,68 +35,98 @@ fun AccountInformationScreen(
         }
     }
 
-    ConstraintLayout(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        val (titleRef, nameFieldRef, emailFieldRef, passwordFieldRef, saveButtonRef) = createRefs()
-
-        Text(
-            text = "Account Information",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.constrainAs(titleRef) {
-                top.linkTo(parent.top, margin = 24.dp)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-            }
-        )
-
-        TextField(
-            value = name,
-            onValueChange = { name = it },
-            label = { Text("Name") },
-            modifier = Modifier.constrainAs(nameFieldRef) {
-                top.linkTo(titleRef.bottom, margin = 24.dp)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-            }
-        )
-
-        TextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") },
-            modifier = Modifier.constrainAs(emailFieldRef) {
-                top.linkTo(nameFieldRef.bottom, margin = 16.dp)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-            }
-        )
-
-        TextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Password") },
-            modifier = Modifier.constrainAs(passwordFieldRef) {
-                top.linkTo(emailFieldRef.bottom, margin = 16.dp)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-            }
-        )
-
-        Button(
-            onClick = {
-                viewModel.updateUser(name, email, password)
-            },
-            modifier = Modifier.constrainAs(saveButtonRef) {
-                top.linkTo(passwordFieldRef.bottom, margin = 24.dp)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-            }
+    // A top-level Scaffold for a top app bar + content
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = { Text("Account Information") },
+                navigationIcon = {
+                    IconButton(onClick = onBackClick) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                }
+            )
+        }
+    ) { innerPadding ->
+        // Main content area
+        Column(
+            modifier = modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("Save")
+            Text(
+                text = "Update your account details",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+
+            // Name
+            OutlinedTextField(
+                value = name,
+                onValueChange = { name = it },
+                label = { Text("Name") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            // Email
+            OutlinedTextField(
+                value = email,
+                onValueChange = { email = it },
+                label = { Text("Email") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            // Password
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Password") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            // Row of buttons (Save + Cancel)
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                OutlinedButton(
+                    onClick = {
+                        viewModel.updateUser(name, email, password)
+                        showSuccessDialog = true
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Green,
+                        contentColor = Color.White
+                    )
+                ) {
+                    Text("Save")
+                }
+
+                OutlinedButton(
+                    onClick = onBackClick,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Red,
+                        contentColor = Color.Black
+                    )
+                ) {
+                    Text("Cancel")
+                }
+            }
+
+            // Success dialog if user info is updated
+            if (showSuccessDialog) {
+                SuccessDialog(
+                    title = "Update Successful",
+                    text = "Your account information has been updated!",
+                    onDismiss = { showSuccessDialog = false }
+                )
+            }
         }
     }
 }

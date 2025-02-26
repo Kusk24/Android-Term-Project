@@ -2,9 +2,12 @@ package com.example.androidtermprojectmotopedia.viewModel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.androidtermprojectmotopedia.database.NotificationDatabase
 import com.example.androidtermprojectmotopedia.repository.NotificationRepository
 import com.example.androidtermprojectmotopedia.model.Notification
+import kotlinx.coroutines.launch
 
 class NotificationViewModel(application: Application): AndroidViewModel(application) {
 
@@ -16,6 +19,13 @@ class NotificationViewModel(application: Application): AndroidViewModel(applicat
 
     suspend fun addMessages(notification: Notification){
         repositoryNotification.addNotification(notification)
+    }
+
+
+    fun deleteMessages(notification: Notification){
+        viewModelScope.launch {
+            repositoryNotification.deleteNotification(notification)
+        }
     }
 
 

@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -48,7 +50,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            AndroidTermProjectMotopediaTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
 
                     val context = LocalContext.current
@@ -56,11 +57,15 @@ class MainActivity : AppCompatActivity() {
                     val userRepository = remember { UserRepository() }
                     val factory = remember { UserViewModelFactory(userRepository, userPreferencesRepository) }
                     val userViewModel: UserViewModel = viewModel(factory = factory)
+                    val isDarkTheme by userViewModel.darkTheme.observeAsState(initial = false)
 
-                    // Then show your RootScreen
-                    RootScreen(userViewModel = userViewModel, modifier = Modifier.padding(innerPadding))
-//                    BrandScreen(modifier = Modifier.padding(innerPadding))
-                }
+
+                    AndroidTermProjectMotopediaTheme(
+                        darkTheme = isDarkTheme
+                    ) {
+                        // Your composable content
+                        RootScreen(userViewModel = userViewModel, modifier = Modifier.padding(innerPadding))
+                    }
             }
         }
 

@@ -1,14 +1,13 @@
 package com.example.androidtermprojectmotopedia.view
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.Help
-import androidx.compose.material.icons.filled.Bookmarks
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.Notifications
@@ -18,6 +17,7 @@ import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -28,19 +28,24 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.example.androidtermprojectmotopedia.R
+import com.example.androidtermprojectmotopedia.viewModel.UserViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailedDrawer(
     navController: NavController,
-    drawerState: DrawerState
+    drawerState: DrawerState,
+    userViewModel: UserViewModel
 ) {
     val scope = rememberCoroutineScope()
     var selectedItem by remember { mutableStateOf("Home") }
-    var theme by remember { mutableStateOf(false) }
+    val currentTheme by userViewModel.darkTheme.observeAsState(false)
+    var currentUser = userViewModel.currentUser.collectAsState().value
 
-    ModalDrawerSheet {
+    ModalDrawerSheet(
+        drawerContainerColor = (MaterialTheme.colorScheme.background)
+    ) {
         Column(
             modifier = Modifier
                 .padding(horizontal = 16.dp)
@@ -48,7 +53,7 @@ fun DetailedDrawer(
         ) {
             Spacer(Modifier.height(12.dp))
             Text(
-                "Motopedia",
+                "MotoPedia",
                 modifier = Modifier.padding(16.dp),
                 style = MaterialTheme.typography.titleLarge
             )
@@ -61,29 +66,41 @@ fun DetailedDrawer(
                     .fillMaxWidth()
                     .wrapContentWidth(Alignment.CenterHorizontally)
             ) {
-                AsyncImage(
-                    model = "https://i.pinimg.com/736x/53/fe/d1/53fed15d25b9308613788977fca0d509.jpg",
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(100.dp)
-                        .clip(RoundedCornerShape(50.dp))
-                        .border(
-                            border = BorderStroke(1.dp, Color.Black),
-                            shape = RoundedCornerShape(50.dp)
-                        )
-                )
+                if (currentUser != null) {
+                    AsyncImage(
+                        model = if (!currentUser.user.profile_image.isNullOrBlank()) {
+                            currentUser.user.profile_image
+                        } else {
+                            "https://i.pinimg.com/736x/53/fe/d1/53fed15d25b9308613788977fca0d509.jpg"
+                        },
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(100.dp)
+                            .clip(RoundedCornerShape(50.dp))
+                            .border(
+                                border = BorderStroke(1.dp, Color.Black),
+                                shape = RoundedCornerShape(50.dp)
+                            )
+                    )
+                }
             }
 
             Spacer(Modifier.height(12.dp))
 
-            Text(
-                text = stringResource(id = R.string.profile_name),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentWidth(Alignment.CenterHorizontally),
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 22.sp
-            )
+            if (currentUser != null) {
+                Text(
+                    text = if (!currentUser.user.profile_image.isNullOrBlank()) {
+                        currentUser.user.name
+                    } else {
+                        stringResource(R.string.profile_name)
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentWidth(Alignment.CenterHorizontally),
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 22.sp
+                )
+            }
 
             Spacer(Modifier.height(12.dp))
             HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
@@ -146,16 +163,6 @@ fun DetailedDrawer(
                     navController.navigate("Notification")
                 }
             )
-            NavigationDrawerItem(
-                label = { Text(text = stringResource(id = R.string.saved)) },
-                selected = selectedItem == "Saved",
-                icon = { Icon(Icons.Default.Bookmarks, contentDescription = null) },
-                onClick = {
-                    selectedItem = "Saved"
-                    scope.launch { drawerState.close() }
-                    navController.navigate("Saved")
-                }
-            )
 
             HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
@@ -186,15 +193,6 @@ fun DetailedDrawer(
                     navController.navigate("Settings")
                 }
             )
-            NavigationDrawerItem(
-                label = { Text(text = stringResource(id = R.string.help_and_feedback)) },
-                selected = false,
-                icon = { Icon(Icons.AutoMirrored.Outlined.Help, contentDescription = null) },
-                onClick = {
-                    scope.launch { drawerState.close() }
-                    // Additional logic...
-                }
-            )
 
             // Theme Switch
             ConstraintLayout(
@@ -213,8 +211,9 @@ fun DetailedDrawer(
                         }
                 )
                 Switch(
-                    checked = theme,
-                    onCheckedChange = { theme = it },
+                    checked = currentTheme,
+                    onCheckedChange = { newValue ->
+                        userViewModel.setDarkTheme(newValue)},
                     modifier = Modifier
                         .wrapContentHeight(Alignment.Bottom)
                         .constrainAs(item2) {

@@ -1,17 +1,20 @@
 package com.example.androidtermprojectmotopedia.repository
 
+import android.net.Uri
 import com.example.androidtermprojectmotopedia.model.Motorcycle
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.tasks.await
 
 class MotorcycleRepository(
-    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val db: FirebaseFirestore = FirebaseFirestore.getInstance(),
+    private val storage: FirebaseStorage = FirebaseStorage.getInstance()
 ) {
     private val motorcyclesRef = db.collection("motorcycles")
 
     /**
-     * Fetch all motorcycles once (not real-time).
+     * 1) Read all motorcycle docs once (not real-time).
      */
     suspend fun getAllMotorcyclesOnce(): List<Motorcycle> {
         val snapshot = motorcyclesRef.get().await()
@@ -19,41 +22,71 @@ class MotorcycleRepository(
     }
 
     /**
-     * Create/add a new motorcycle document. Firestore auto-generates docId.
+     * 2) Create/upload a new motorcycle document with optional image/video uploads.
+     *    Firestore auto-generates docId.
      */
-    suspend fun addMotorcycle(motorcycle: Motorcycle) {
-        // Omit docId so we don't store it in Firestore.
+    suspend fun uploadMotorcycle(
+        brand: String,
+        model: String,
+        detail: String,
+        postedBy: String,
+        dateString: String,
+        imageUri: Uri?,
+        videoUri: Uri?
+    ) {
+        // 1) Upload image to Storage if imageUri != null
+        val imageUrl = imageUri?.let { uploadFileToStorage(it, "motorcycle_images") } ?: ""
+
+        // 2) Upload video to Storage if videoUri != null
+        val videoUrl = videoUri?.let { uploadFileToStorage(it, "motorcycle_videos") } ?: ""
+
+        // 3) Create a new Motorcycle object
+
+        val dateFormat = java.text.SimpleDateFormat(
+            "MMMM dd, yyyy 'at' hh:mm:ss a 'UTC'Z",
+            java.util.Locale.getDefault()
+        )
+        val nowString = dateFormat.format(java.util.Date())
+
+        val newMotorcycle = Motorcycle(
+            brand         = brand,
+            model         = model,
+            detail        = detail,
+            posted_by     = postedBy,
+            release_date  = dateString,
+            image         = imageUrl,
+            video         = videoUrl,
+            status        = "pending",  // default
+            request_delete = false,     // default
+            uploaded_date = nowString     // <--- store the date/time of upload
+        )
+
+        // 4) Save to Firestore (omit docId so Firestore can auto-generate it).
         val data = mapOf(
-            "brand"         to motorcycle.brand,
-            "detail"        to motorcycle.detail,
-            "image"         to motorcycle.image,
-            "model"         to motorcycle.model,
-            "posted_by"     to motorcycle.posted_by,
-            "release_date"  to motorcycle.release_date,
-            "status"        to motorcycle.status,
-            "video"         to motorcycle.video,
-            "request_delete" to motorcycle.request_delete  // <--- new field
+            "brand"          to newMotorcycle.brand,
+            "detail"         to newMotorcycle.detail,
+            "image"          to newMotorcycle.image,
+            "model"          to newMotorcycle.model,
+            "posted_by"      to newMotorcycle.posted_by,
+            "release_date"   to newMotorcycle.release_date,
+            "status"         to newMotorcycle.status,
+            "video"          to newMotorcycle.video,
+            "request_delete" to newMotorcycle.request_delete,
+            "uploaded_date"  to newMotorcycle.uploaded_date  // <--- include it in Firestore
         )
         motorcyclesRef.add(data).await()
     }
 
     /**
-     * Update any fields in an existing doc by docId.
+     * 3) Update an existing motorcycle doc by docId.
+     *    Provide whichever fields changed in [newData].
      */
     suspend fun updateMotorcycle(docId: String, newData: Map<String, Any?>) {
         motorcyclesRef.document(docId).update(newData).await()
     }
 
     /**
-     * Delete a motorcycle doc by docId.
-     */
-    suspend fun deleteMotorcycle(docId: String) {
-        motorcyclesRef.document(docId).delete().await()
-    }
-
-    /**
-     * Convenience method: mark `request_delete = true`.
-     * (Instead of fully deleting, just set the request_delete flag.)
+     * 4) Mark `request_delete = true` for a given docId (soft-delete).
      */
     suspend fun requestDeleteMotorcycle(docId: String) {
         motorcyclesRef.document(docId)
@@ -62,28 +95,22 @@ class MotorcycleRepository(
     }
 
     /**
-     * If you want real-time updates, you'd add a snapshot listener:
+     * Helper to upload a single file (image or video) to Firebase Storage
+     * under a given folderName (e.g. "motorcycle_images" or "motorcycle_videos").
+     * Returns the download URL as a String.
      */
-    fun listenToMotorcycles(
-        onDataChange: (List<Motorcycle>) -> Unit,
-        onError: (Exception) -> Unit
-    ) {
-        motorcyclesRef.addSnapshotListener { snapshot, e ->
-            if (e != null) {
-                onError(e)
-                return@addSnapshotListener
-            }
-            if (snapshot != null) {
-                onDataChange(snapshot.toMotorcycleList())
-            } else {
-                onDataChange(emptyList())
-            }
-        }
+    private suspend fun uploadFileToStorage(fileUri: Uri, folderName: String): String {
+        val storageRef = storage.reference.child("$folderName/${fileUri.lastPathSegment}_${System.currentTimeMillis()}")
+        // Upload the file
+        storageRef.putFile(fileUri).await()
+        // Get the download URL
+        val downloadUrl = storageRef.downloadUrl.await()
+        return downloadUrl.toString()
     }
 }
 
 /**
- * Convert a QuerySnapshot into a List<Motorcycle>, including `request_delete`.
+ * Convert a Firestore QuerySnapshot into a List<Motorcycle>.
  */
 private fun QuerySnapshot.toMotorcycleList(): List<Motorcycle> {
     return documents.mapNotNull { doc ->
@@ -95,7 +122,8 @@ private fun QuerySnapshot.toMotorcycleList(): List<Motorcycle> {
         val release_date  = doc.getString("release_date") ?: ""
         val status        = doc.getString("status") ?: ""
         val video         = doc.getString("video") ?: ""
-        val requestDelete = doc.getBoolean("request_delete") ?: false // <--
+        val requestDelete = doc.getBoolean("request_delete") ?: false
+        val uploadedDate  = doc.getString("uploaded_date") ?: ""  // <--- read new field
 
         Motorcycle(
             brand = brand,
@@ -106,8 +134,9 @@ private fun QuerySnapshot.toMotorcycleList(): List<Motorcycle> {
             release_date = release_date,
             status = status,
             video = video,
-            docId = doc.id,  // Firestore doc ID
-            request_delete = requestDelete
+            docId = doc.id,   // Firestore doc ID
+            request_delete = requestDelete,
+            uploaded_date = uploadedDate  // <--- store in the data class
         )
     }
 }

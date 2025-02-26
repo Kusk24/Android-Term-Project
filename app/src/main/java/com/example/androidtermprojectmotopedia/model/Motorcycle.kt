@@ -21,5 +21,6 @@ data class Motorcycle(
     val status: String = "",
     val video: String = "",
     val docId: String = "" ,  // Firestore doc ID (not a field in the DB)
-    val request_delete : Boolean = false
+    val request_delete : Boolean = false,
+    val uploaded_date: String = ""  // <--- NEW FIELD
 )

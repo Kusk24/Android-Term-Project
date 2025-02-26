@@ -1,9 +1,17 @@
 package com.example.androidtermprojectmotopedia.view
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -13,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -30,77 +39,84 @@ import com.example.androidtermprojectmotopedia.viewModel.UserViewModelFactory
 @Composable
 fun LoginPage(
     modifier: Modifier = Modifier,
-    errorMessage: String? = null,  // New parameter for error messages.
+    errorMessage: String? = null,
     loginButtonClicked: (String, String) -> Unit
 ) {
-    ConstraintLayout(modifier = modifier.fillMaxSize()) {
-        val (item1, item2, item3, item4, errorText) = createRefs()
-        val line1 = createGuidelineFromTop(0.6f)
+    // States for text fields
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
 
-        var email by remember { mutableStateOf("") }
-        var password by remember { mutableStateOf("") }
-
-        Text(
-            text = "Welcome To MotoPedia",
-            fontWeight = FontWeight.Bold,
-            fontSize = 30.sp,
-            modifier = Modifier.constrainAs(item4) {
-                bottom.linkTo(item1.top, margin = 75.dp)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-            }
-        )
-
-        TextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") },
-            modifier = Modifier.constrainAs(item1) {
-                bottom.linkTo(item2.top, margin = 50.dp)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-            }
-        )
-
-        TextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Password") },
-            modifier = Modifier.constrainAs(item2) {
-                bottom.linkTo(line1, margin = 20.dp)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-            }
-        )
-
-        // Display error message if it's not null.
-        if (!errorMessage.isNullOrEmpty()) {
-            Text(
-                text = errorMessage,
-                color = androidx.compose.ui.graphics.Color.Red,
-                modifier = Modifier.constrainAs(errorText) {
-                    top.linkTo(item2.bottom, margin = 8.dp)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }
-            )
-        }
-
-        Button(
-            onClick = { loginButtonClicked(email, password) },
-            modifier = Modifier
-                .constrainAs(item3) {
-                    top.linkTo(line1, margin = 20.dp)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }
-                .width(100.dp)
-                .height(50.dp)
+    // Top-level Box for background or padding
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        // Main column in the center
+        Column(
+            modifier = Modifier.align(Alignment.Center),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("Log In")
+            // App title or logo
+            Text(
+                text = "MotoPedia",
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "Log in to continue",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
+            )
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            // Email Field
+            OutlinedTextField(
+                value = email,
+                onValueChange = { email = it },
+                label = { Text("Email") },
+                modifier = Modifier.fillMaxWidth(0.8f)
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Password Field
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Password") },
+                modifier = Modifier.fillMaxWidth(0.8f)
+            )
+
+            // Error message if present
+            if (!errorMessage.isNullOrEmpty()) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = errorMessage,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Login button
+            Button(
+                onClick = { loginButtonClicked(email, password) },
+                modifier = Modifier
+                    .fillMaxWidth(0.5f)
+                    .height(48.dp)
+            ) {
+                Text("Log In")
+            }
         }
     }
 }
+
 
 
 @Composable
@@ -108,20 +124,27 @@ fun LoginScreen(userViewModel: UserViewModel) {
     val currentUser by userViewModel.currentUser.collectAsState(initial = null)
     val errorMessage by userViewModel.errorMessage.collectAsState()
 
+    // Ensure we load the current user from DataStore/Firestore
     LaunchedEffect(Unit) {
         userViewModel.loadCurrentUser()
     }
 
     if (currentUser?.docId.isNullOrEmpty()) {
         // Show login UI
-        LoginPage(
-            loginButtonClicked = { email, password ->
-                userViewModel.loginUser(email, password)
-            },
-            errorMessage = errorMessage
-        )
+        // Wrap in a Surface with a consistent background color
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            LoginPage(
+                loginButtonClicked = { email, password ->
+                    userViewModel.loginUser(email, password)
+                },
+                errorMessage = errorMessage
+            )
+        }
     } else {
-        // Show main UI
+        // Already logged in
         MainAppScreen(userViewModel = userViewModel)
     }
 }

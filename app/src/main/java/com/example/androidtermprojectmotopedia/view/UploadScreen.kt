@@ -18,8 +18,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -40,20 +38,34 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
+import com.example.androidtermprojectmotopedia.repository.UserPreferencesRepository
+import com.example.androidtermprojectmotopedia.repository.UserRepository
+import com.example.androidtermprojectmotopedia.viewModel.MotorcycleViewModel
+import com.example.androidtermprojectmotopedia.viewModel.UserViewModel
+import com.example.androidtermprojectmotopedia.viewModel.UserViewModelFactory
+import kotlinx.coroutines.launch
 import java.util.Date
 import java.util.Locale
 
 @Composable
-fun UploadScreen(modifier: Modifier = Modifier) {
+fun UploadScreen(modifier: Modifier = Modifier, userViewModel: UserViewModel) {
     val scrollState = rememberScrollState()
+    // Obtain the MotorcycleViewModel.
+    val motorcycleViewModel: MotorcycleViewModel = remember { MotorcycleViewModel() }
+
+    // For user info
+    val postedByDocId = userViewModel.currentUser.value?.docId ?: ""
 
     // States for image/video picking
     var selectedImage by remember {
@@ -70,7 +82,7 @@ fun UploadScreen(modifier: Modifier = Modifier) {
         mutableStateOf<ActivityResultContracts.PickVisualMedia.VisualMediaType?>(null)
     }
 
-    // States for brand, model, article
+    // States for brand, model, and article
     var brand by remember { mutableStateOf("") }
     var model by remember { mutableStateOf("") }
     var article by remember { mutableStateOf("") }
@@ -79,18 +91,19 @@ fun UploadScreen(modifier: Modifier = Modifier) {
     var selectedDate by remember { mutableStateOf<Long>(0L) }
     var showModalInput by remember { mutableStateOf(false) }
 
+    // State to show the success dialog
+    var showSuccessDialog by remember { mutableStateOf(false) }
+
+    val coroutineScope = rememberCoroutineScope()
+
     // Setup pickMedia launcher
     val pickMedia = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia()
     ) { uri ->
         if (uri != null) {
             when (mediaType) {
-                ActivityResultContracts.PickVisualMedia.ImageOnly -> {
-                    selectedImage = uri
-                }
-                ActivityResultContracts.PickVisualMedia.VideoOnly -> {
-                    selectedVideo = uri
-                }
+                ActivityResultContracts.PickVisualMedia.ImageOnly -> selectedImage = uri
+                ActivityResultContracts.PickVisualMedia.VideoOnly -> selectedVideo = uri
                 else -> Unit
             }
             Log.d("PhotoPicker", "Selected URI: $uri")
@@ -111,14 +124,14 @@ fun UploadScreen(modifier: Modifier = Modifier) {
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // A simple title
+            // Title
             Text(
-                text = "Upload a Article",
+                text = "Upload a Motorcycle Article",
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.onBackground
             )
 
-            // Row with image and video side-by-side
+            // Row with image and video boxes side-by-side
             Row(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -133,16 +146,16 @@ fun UploadScreen(modifier: Modifier = Modifier) {
                         .clickable {
                             mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly
                             pickMedia.launch(PickVisualMediaRequest(mediaType!!))
-                        }.background(Color.White),
+                        }
+                        .background(Color.White),
                     contentAlignment = Alignment.Center
                 ) {
                     AsyncImage(
                         model = selectedImage,
                         contentDescription = "Selected Image",
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier.fillMaxSize()
                     )
                 }
-
                 // Video box
                 Box(
                     modifier = Modifier
@@ -152,18 +165,19 @@ fun UploadScreen(modifier: Modifier = Modifier) {
                         .clickable {
                             mediaType = ActivityResultContracts.PickVisualMedia.VideoOnly
                             pickMedia.launch(PickVisualMediaRequest(mediaType!!))
-                        }.background(Color.White),
+                        }
+                        .background(Color.White),
                     contentAlignment = Alignment.Center
                 ) {
                     AsyncImage(
                         model = selectedVideo,
                         contentDescription = "Selected Video",
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier.fillMaxSize()
                     )
                 }
             }
 
-            // Brand field
+            // Brand text field
             TextField(
                 value = brand,
                 onValueChange = { brand = it },
@@ -171,7 +185,7 @@ fun UploadScreen(modifier: Modifier = Modifier) {
                 modifier = Modifier.fillMaxWidth(0.8f)
             )
 
-            // Model field
+            // Model text field
             TextField(
                 value = model,
                 onValueChange = { model = it },
@@ -179,19 +193,20 @@ fun UploadScreen(modifier: Modifier = Modifier) {
                 modifier = Modifier.fillMaxWidth(0.8f)
             )
 
-            // Row for date
+            // Row for date selection
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier.fillMaxWidth(0.8f)
             ) {
                 Text(text = convertMillisToDate(selectedDate))
+                Spacer(modifier = Modifier.weight(1f))
                 Button(onClick = { showModalInput = true }) {
                     Text("Choose Date")
                 }
             }
 
-            // Article input in a Card
+            // Article input inside a Card
             Card(
                 shape = RoundedCornerShape(16.dp),
                 modifier = Modifier.fillMaxWidth(0.8f)
@@ -210,7 +225,20 @@ fun UploadScreen(modifier: Modifier = Modifier) {
             // Upload button
             Button(
                 onClick = {
-                    // TODO: implement your upload logic
+                    // Launch a coroutine to upload the motorcycle article.
+                    coroutineScope.launch {
+                        motorcycleViewModel.uploadMotorcycle(
+                            brand = brand,
+                            model = model,
+                            detail = article,
+                            postedBy = postedByDocId,
+                            dateString = convertMillisToDate(selectedDate),
+                            imageUri = selectedImage,
+                            videoUri = selectedVideo
+                        )
+                        // Show success dialog after upload completes.
+                        showSuccessDialog = true
+                    }
                 },
                 colors = ButtonDefaults.buttonColors(Color(0xFF4CAF50)),
                 modifier = Modifier
@@ -222,7 +250,7 @@ fun UploadScreen(modifier: Modifier = Modifier) {
             }
         }
 
-        // DatePicker dialog if needed
+        // Show date picker dialog if needed
         if (showModalInput) {
             DatePickerModalInput(
                 onDateSelected = {
@@ -234,6 +262,13 @@ fun UploadScreen(modifier: Modifier = Modifier) {
                 onDismiss = { showModalInput = false }
             )
         }
+
+        // Show success pop-up dialog when upload completes
+        if (showSuccessDialog) {
+            SuccessDialog(title = "Upload Successful",
+                text = "Your motorcycle article has been successfully uploaded!, wait for the admin to approve your article",
+                onDismiss = { showSuccessDialog = false })
+        }
     }
 }
 
@@ -244,7 +279,6 @@ fun DatePickerModalInput(
     onDismiss: () -> Unit
 ) {
     val datePickerState = rememberDatePickerState(initialDisplayMode = DisplayMode.Input)
-
     DatePickerDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
@@ -266,8 +300,7 @@ fun DatePickerModalInput(
 }
 
 /**
- * Helper function to convert a millis timestamp into a string date.
- * If 0L, defaults to "01/01/1970".
+ * Helper function to convert milliseconds into a formatted date string.
  */
 fun convertMillisToDate(millis: Long): String {
     val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
