@@ -125,7 +125,7 @@ fun UploadScreen(modifier : Modifier){
             mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly
             pickMedia.launch(PickVisualMediaRequest(mediaType!!))
         }.constrainAs(item1){
-            top.linkTo(parent.top, 100.dp)
+            top.linkTo(parent.top, 20.dp)
             start.linkTo(parent.start)
             end.linkTo(parent.end)
         }.height(200.dp).border(1.dp, Color.Black, shape = RoundedCornerShape(corner = CornerSize(15.dp),)))
@@ -199,7 +199,9 @@ fun UploadScreen(modifier : Modifier){
             top.linkTo(item4.bottom,20.dp)
             start.linkTo(parent.start)
             end.linkTo(parent.end)
-        }.size(300.dp))
+        }.size(300.dp), label = {
+            Text("Article")
+        })
 
         Button(onClick = {}, colors = ButtonDefaults.buttonColors(Color.Green), modifier = Modifier.constrainAs(item6){
             top.linkTo(item5.bottom, 20.dp)

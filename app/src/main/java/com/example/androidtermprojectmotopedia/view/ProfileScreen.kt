@@ -41,7 +41,7 @@ fun ProfileScreen(modifier : Modifier){
                 .clip(RoundedCornerShape(50.dp))
                 .border(border = BorderStroke(1.dp, Color.Black), shape = RoundedCornerShape(50.dp))
                 .constrainAs(item1){
-                    top.linkTo(parent.top, 100.dp)
+                    top.linkTo(parent.top,20.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 }
