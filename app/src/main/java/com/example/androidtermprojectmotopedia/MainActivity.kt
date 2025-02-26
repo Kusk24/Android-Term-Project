@@ -13,13 +13,20 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.androidtermprojectmotopedia.model.Brand
+import com.example.androidtermprojectmotopedia.repository.UserPreferencesRepository
+import com.example.androidtermprojectmotopedia.repository.UserRepository
 import com.example.androidtermprojectmotopedia.ui.theme.AndroidTermProjectMotopediaTheme
 import com.example.androidtermprojectmotopedia.view.BrandScreen
-import com.example.androidtermprojectmotopedia.view.HomeScreen
 import com.example.androidtermprojectmotopedia.view.MainAppScreen
+import com.example.androidtermprojectmotopedia.view.RootScreen
+import com.example.androidtermprojectmotopedia.viewModel.UserViewModel
+import com.example.androidtermprojectmotopedia.viewModel.UserViewModelFactory
 import com.google.firebase.messaging.ktx.messaging
 import com.google.firebase.ktx.Firebase
 
@@ -43,7 +50,15 @@ class MainActivity : AppCompatActivity() {
         setContent {
             AndroidTermProjectMotopediaTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    MainAppScreen(modifier = Modifier.padding(innerPadding))
+
+                    val context = LocalContext.current
+                    val userPreferencesRepository = remember { UserPreferencesRepository(context) }
+                    val userRepository = remember { UserRepository() }
+                    val factory = remember { UserViewModelFactory(userRepository, userPreferencesRepository) }
+                    val userViewModel: UserViewModel = viewModel(factory = factory)
+
+                    // Then show your RootScreen
+                    RootScreen(userViewModel = userViewModel, modifier = Modifier.padding(innerPadding))
 //                    BrandScreen(modifier = Modifier.padding(innerPadding))
                 }
             }
@@ -78,7 +93,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun subscribeTopics() {
-        Firebase.messaging.subscribeToTopic("New Released")
+        Firebase.messaging.subscribeToTopic("NewArticle")
             .addOnCompleteListener { task ->
                 val msg = if (task.isSuccessful) "Subscribed to New Released topic" else "Subscription failed"
                 Log.d("MainActivity", msg)
