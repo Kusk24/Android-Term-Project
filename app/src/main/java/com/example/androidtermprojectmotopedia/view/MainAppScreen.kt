@@ -82,7 +82,7 @@ fun MainAppScreen(userViewModel: UserViewModel, // Add this
                 }
 //                composable("Login") { LoginScreen(navController = navController) }
                 composable("accountInfo") {
-                    AccountInformationScreen()
+                    AccountInformationScreen(userViewModel)
                 }
             }
         }

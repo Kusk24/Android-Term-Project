@@ -308,48 +308,111 @@ import com.example.androidtermprojectmotopedia.model.Motorcycle
 
 val demoMotor = listOf(
     Motorcycle(
-        name = "R1",
-        engine = "998cc inline-4",
-        image = "https://storagetym.blob.core.windows.net/www2021/images/product-2021/bigbike/model-big-bike-2023/up-date-big-bike-2023/r1-2022/r1-2022-blue-01.png?sfvrsn=da9d3df8_2"
+        brand = "Yamaha",
+        detail = "998cc inline-4 engine",
+        image = "https://storagetym.blob.core.windows.net/www2021/images/product-2021/bigbike/model-big-bike-2023/up-date-big-bike-2023/r1-2022/r1-2022-blue-01.png?sfvrsn=da9d3df8_2",
+        model = "R1",
+        posted_by = "admin",
+        release_date = "2022",
+        status = "active",
+        video = "",
+        docId = "doc1",
+        request_delete = false
     ),
     Motorcycle(
-        name = "MT-09",
-        engine = "847cc inline-3",
-        image = "https://storagetym.blob.core.windows.net/www2021/images/product-2021/bigbike/model-2024/mt-09/model-mt-09-size-700x525/mt09-icon-blue-02-700x525.png?sfvrsn=b52dc159_2"
+        brand = "Yamaha",
+        detail = "847cc inline-3 engine",
+        image = "https://storagetym.blob.core.windows.net/www2021/images/product-2021/bigbike/model-2024/mt-09/model-mt-09-size-700x525/mt09-icon-blue-02-700x525.png?sfvrsn=b52dc159_2",
+        model = "MT-09",
+        posted_by = "admin",
+        release_date = "2023",
+        status = "active",
+        video = "",
+        docId = "doc2",
+        request_delete = false
     ),
     Motorcycle(
-        name = "MT-07",
-        engine = "699cc parellel twin",
-        image = ""
+        brand = "Yamaha",
+        detail = "699cc parallel twin engine",
+        image = "",
+        model = "MT-07",
+        posted_by = "admin",
+        release_date = "2023",
+        status = "active",
+        video = "",
+        docId = "doc3",
+        request_delete = false
     ),
     Motorcycle(
-        name = "MT-03",
-        engine = "",
-        image = ""
+        brand = "Yamaha",
+        detail = "",
+        image = "",
+        model = "MT-03",
+        posted_by = "admin",
+        release_date = "2023",
+        status = "active",
+        video = "",
+        docId = "doc4",
+        request_delete = false
     ),
     Motorcycle(
-        name = "R6",
-        engine = "",
-        image = ""
+        brand = "Yamaha",
+        detail = "",
+        image = "",
+        model = "R6",
+        posted_by = "admin",
+        release_date = "2023",
+        status = "active",
+        video = "",
+        docId = "doc5",
+        request_delete = false
     ),
     Motorcycle(
-        name = "R3",
-        engine = "",
-        image = ""
+        brand = "Yamaha",
+        detail = "",
+        image = "",
+        model = "R3",
+        posted_by = "admin",
+        release_date = "2023",
+        status = "active",
+        video = "",
+        docId = "doc6",
+        request_delete = false
     ),
     Motorcycle(
-        name = "XSR900",
-        engine = "",
-        image = ""
+        brand = "Yamaha",
+        detail = "",
+        image = "",
+        model = "XSR900",
+        posted_by = "admin",
+        release_date = "2023",
+        status = "active",
+        video = "",
+        docId = "doc7",
+        request_delete = false
     ),
     Motorcycle(
-        name = "XSR700",
-        engine = "",
-        image = ""
+        brand = "Yamaha",
+        detail = "",
+        image = "",
+        model = "XSR700",
+        posted_by = "admin",
+        release_date = "2023",
+        status = "active",
+        video = "",
+        docId = "doc8",
+        request_delete = false
     ),
     Motorcycle(
-        name = "XSR155",
-        engine = "",
-        image = ""
+        brand = "Yamaha",
+        detail = "",
+        image = "",
+        model = "XSR155",
+        posted_by = "admin",
+        release_date = "2023",
+        status = "active",
+        video = "",
+        docId = "doc9",
+        request_delete = false
     )
 )

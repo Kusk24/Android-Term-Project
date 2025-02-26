@@ -6,6 +6,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -15,15 +17,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.example.androidtermprojectmotopedia.viewModel.UserViewModel
 
 @Composable
 fun AccountInformationScreen(
+    viewModel: UserViewModel, // Pass your viewModel instance
     modifier: Modifier = Modifier
 ) {
-    // Local state for user fields (purely UI here)
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    // Optionally pre-fill fields with current user info if available
+    val currentUser = viewModel.currentUser.collectAsState().value
+    LaunchedEffect(currentUser) {
+        currentUser?.let { userWithId ->
+            name = userWithId.user.name
+            email = userWithId.user.email
+            password = userWithId.user.password
+        }
+    }
 
     ConstraintLayout(
         modifier = modifier
@@ -78,7 +91,7 @@ fun AccountInformationScreen(
 
         Button(
             onClick = {
-                // TODO: Add your "Save" logic or ViewModel calls here
+                viewModel.updateUser(name, email, password)
             },
             modifier = Modifier.constrainAs(saveButtonRef) {
                 top.linkTo(passwordFieldRef.bottom, margin = 24.dp)

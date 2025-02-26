@@ -18,17 +18,8 @@ class UserRepository {
      * or some custom string ID you generate.
      * If you want Firestore to generate an ID, see addUserAutoId().
      */
-    suspend fun createUserWithId(docId: String, user: User) {
-        userCollection().document(docId).set(user).await()
-    }
-
-    /**
-     * Create a new user with an auto-generated Firestore document ID.
-     * Returns the newly generated doc ID.
-     */
-    suspend fun addUserAutoId(user: User): String {
-        val docRef = userCollection().add(user).await()
-        return docRef.id
+    suspend fun updateUserFields(docId: String, fields: Map<String, Any>) {
+        userCollection().document(docId).update(fields).await()
     }
 
     /**
@@ -59,19 +50,5 @@ class UserRepository {
             }
         }
         return null
-    }
-
-    /**
-     * Update a user’s fields (e.g., name, profile_image) by doc ID.
-     */
-    suspend fun updateUserFields(docId: String, fields: Map<String, Any>) {
-        userCollection().document(docId).update(fields).await()
-    }
-
-    /**
-     * Delete a user document by ID.
-     */
-    suspend fun deleteUser(docId: String) {
-        userCollection().document(docId).delete().await()
     }
 }

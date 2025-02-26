@@ -50,6 +50,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.example.androidtermprojectmotopedia.model.Brand
+import com.example.androidtermprojectmotopedia.model.BrandSaver
 import com.example.androidtermprojectmotopedia.ui.theme.SoftBeige
 import com.example.androidtermprojectmotopedia.ui.theme.SoftDark
 import com.example.androidtermprojectmotopedia.viewModel.BrandViewModel
