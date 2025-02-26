@@ -23,9 +23,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
+import com.example.androidtermprojectmotopedia.R
 import com.example.androidtermprojectmotopedia.viewModel.UserViewModel
 
 @Composable
@@ -61,7 +63,7 @@ fun SettingScreen(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("Account Information")
+            Text(text = stringResource(id = R.string.account_info))
         }
 
         // Row for "Language"
@@ -115,7 +117,7 @@ fun SettingScreen(
             ConstraintLayout(modifier = Modifier.fillMaxSize()) {
                 val (item1, item2) = createRefs()
                 Text(
-                    "Notification",
+                    text = stringResource(id = R.string.notification),
                     modifier = Modifier.constrainAs(item1) {
                         centerTo(parent)
                     }
@@ -146,7 +148,7 @@ fun SettingScreen(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("Help & Support")
+            Text(text = stringResource(id = R.string.help_and_support))
         }
 
         // Row for "FAQs"
@@ -164,7 +166,7 @@ fun SettingScreen(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("FAQs")
+            Text(text = stringResource(id = R.string.faqs))
         }
 
         // Log out Button
@@ -185,7 +187,7 @@ fun SettingScreen(
                 bottom.linkTo(parent.bottom)
             }
         ) {
-            Text("Log out")
+            Text(text = stringResource(R.string.sign_out))
         }
     }
 }
