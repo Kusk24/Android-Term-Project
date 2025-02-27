@@ -1,10 +1,14 @@
 package com.example.androidtermprojectmotopedia.repository
 
 import android.net.Uri
+import android.util.Log
 import com.example.androidtermprojectmotopedia.model.Motorcycle
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
 class MotorcycleRepository(
@@ -43,7 +47,7 @@ class MotorcycleRepository(
         // 3) Create a new Motorcycle object
 
         val dateFormat = java.text.SimpleDateFormat(
-            "MMMM dd, yyyy 'at' hh:mm:ss a 'UTC'Z",
+            "MMMM dd, yyyy",
             java.util.Locale.getDefault()
         )
         val nowString = dateFormat.format(java.util.Date())
@@ -89,9 +93,17 @@ class MotorcycleRepository(
      * 4) Mark `request_delete = true` for a given docId (soft-delete).
      */
     suspend fun requestDeleteMotorcycle(docId: String) {
+        Log.d("FirestoreUpdate", "Updating docId: $docId with new data")
         motorcyclesRef.document(docId)
-            .update("request_delete", true)
+            .update(mapOf("request_delete" to true, "status" to "awaiting_delete"))
             .await()
+        Log.d("FirestoreUpdate", "Update completed for docId: $docId")
+//        motorcyclesRef.document(docId)
+//            .update(mapOf(
+//                "request_delete" to true,
+//                "status" to "awaiting_delete"
+//            ))
+//            .await()
     }
 
     /**
@@ -106,6 +118,34 @@ class MotorcycleRepository(
         // Get the download URL
         val downloadUrl = storageRef.downloadUrl.await()
         return downloadUrl.toString()
+    }
+
+    fun getMotorcyclesByUserId(userId: String): Flow<List<Motorcycle>> = callbackFlow {
+        val registration = motorcyclesRef
+            .whereEqualTo("posted_by", userId)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    close(error)
+                    return@addSnapshotListener
+                }
+                if (snapshot != null) {
+                    trySend(snapshot.toMotorcycleList())
+                }
+            }
+        awaitClose { registration.remove() }
+    }
+
+    fun getMotorcyclesFlow(): Flow<List<Motorcycle>> = callbackFlow {
+        val registration = motorcyclesRef.addSnapshotListener { snapshot, error ->
+            if (error != null) {
+                close(error)
+                return@addSnapshotListener
+            }
+            if (snapshot != null) {
+                trySend(snapshot.toMotorcycleList())
+            }
+        }
+        awaitClose { registration.remove() }
     }
 }
 
@@ -123,7 +163,20 @@ private fun QuerySnapshot.toMotorcycleList(): List<Motorcycle> {
         val status        = doc.getString("status") ?: ""
         val video         = doc.getString("video") ?: ""
         val requestDelete = doc.getBoolean("request_delete") ?: false
-        val uploadedDate  = doc.getString("uploaded_date") ?: ""  // <--- read new field
+        val uploadedDate: String = when (val dateField = doc.get("uploaded_date")) {
+            is String -> dateField
+            is com.google.firebase.Timestamp -> {
+                // Convert Timestamp to a formatted String, if needed.
+                val date = dateField.toDate()
+                // You can reuse the same date format you use on upload:
+                val dateFormat = java.text.SimpleDateFormat(
+                    "MMMM dd, yyyy 'at' hh:mm:ss a 'UTC'Z",
+                    java.util.Locale.getDefault()
+                )
+                dateFormat.format(date)
+            }
+            else -> ""
+        }
 
         Motorcycle(
             brand = brand,

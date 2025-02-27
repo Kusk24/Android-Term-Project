@@ -59,11 +59,9 @@ import java.util.Date
 import java.util.Locale
 
 @Composable
-fun UploadScreen(modifier: Modifier = Modifier, userViewModel: UserViewModel) {
+fun UploadScreen(modifier: Modifier = Modifier, motorcycleViewModel: MotorcycleViewModel, userViewModel: UserViewModel) {
     val scrollState = rememberScrollState()
     // Obtain the MotorcycleViewModel.
-    val motorcycleViewModel: MotorcycleViewModel = remember { MotorcycleViewModel() }
-
     // For user info
     val postedByDocId = userViewModel.currentUser.value?.docId ?: ""
 

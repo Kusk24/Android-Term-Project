@@ -20,13 +20,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.androidtermprojectmotopedia.model.Brand
 import com.example.androidtermprojectmotopedia.repository.UserPreferencesRepository
 import com.example.androidtermprojectmotopedia.repository.UserRepository
 import com.example.androidtermprojectmotopedia.ui.theme.AndroidTermProjectMotopediaTheme
-import com.example.androidtermprojectmotopedia.view.BrandScreen
-import com.example.androidtermprojectmotopedia.view.MainAppScreen
 import com.example.androidtermprojectmotopedia.view.RootScreen
+import com.example.androidtermprojectmotopedia.viewModel.MotorcycleViewModel
 import com.example.androidtermprojectmotopedia.viewModel.UserViewModel
 import com.example.androidtermprojectmotopedia.viewModel.UserViewModelFactory
 import com.google.firebase.messaging.ktx.messaging
@@ -58,13 +56,14 @@ class MainActivity : AppCompatActivity() {
                     val factory = remember { UserViewModelFactory(userRepository, userPreferencesRepository) }
                     val userViewModel: UserViewModel = viewModel(factory = factory)
                     val isDarkTheme by userViewModel.darkTheme.observeAsState(initial = false)
+                    val motorcycleViewModel: MotorcycleViewModel = remember { MotorcycleViewModel() }
 
 
                     AndroidTermProjectMotopediaTheme(
                         darkTheme = isDarkTheme
                     ) {
                         // Your composable content
-                        RootScreen(userViewModel = userViewModel, modifier = Modifier.padding(innerPadding))
+                        RootScreen(userViewModel = userViewModel, motorcycleViewModel = motorcycleViewModel, modifier = Modifier.padding(innerPadding))
                     }
             }
         }
@@ -119,36 +118,3 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-
-
-
-//package com.example.androidtermprojectmotopedia
-//
-//import android.os.Bundle
-//import androidx.activity.ComponentActivity
-//import androidx.activity.compose.setContent
-//import androidx.activity.enableEdgeToEdge
-//import androidx.appcompat.app.AppCompatActivity
-//import androidx.compose.foundation.layout.fillMaxSize
-//import androidx.compose.foundation.layout.padding
-//import androidx.compose.material3.Scaffold
-//import androidx.compose.material3.Text
-//import androidx.compose.runtime.Composable
-//import androidx.compose.ui.Modifier
-//import androidx.compose.ui.tooling.preview.Preview
-//import com.example.androidtermprojectmotopedia.ui.theme.AndroidTermProjectMotopediaTheme
-//import com.example.androidtermprojectmotopedia.view.HomeScreen
-//
-//class MainActivity : AppCompatActivity() {
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        enableEdgeToEdge()
-//        setContent {
-//            AndroidTermProjectMotopediaTheme {
-//                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-//                    HomeScreen(modifier = Modifier.padding(innerPadding))
-//                }
-//            }
-//        }
-//    }
-//}

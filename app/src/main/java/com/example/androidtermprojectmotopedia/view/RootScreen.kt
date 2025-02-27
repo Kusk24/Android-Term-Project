@@ -1,6 +1,5 @@
 package com.example.androidtermprojectmotopedia.view
 
-import android.window.SplashScreen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,7 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,14 +21,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.androidtermprojectmotopedia.viewModel.MotorcycleViewModel
 import com.example.androidtermprojectmotopedia.viewModel.UserViewModel
+import kotlinx.coroutines.delay
 
 @Composable
 fun RootScreen(
     userViewModel: UserViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    motorcycleViewModel: MotorcycleViewModel
 ) {
     // 1) Ensure we try to load the current user from DataStore/Firestore
     LaunchedEffect(Unit) {
@@ -45,7 +48,7 @@ fun RootScreen(
     // 4) Once isLoggedIn is known (not null), wait 2 seconds, then hide splash
     LaunchedEffect(isLoggedIn) {
         if (isLoggedIn != null) {
-            kotlinx.coroutines.delay(1000) // 2-second delay
+            delay(1000) // 2-second delay
             showSplash = false
         }
     }
@@ -57,8 +60,14 @@ fun RootScreen(
     } else {
         // isLoggedIn is no longer null and we've shown splash for at least 2s
         when (isLoggedIn) {
-            true -> MainAppScreen(userViewModel = userViewModel)
-            false -> LoginScreen(userViewModel = userViewModel)
+            true -> MainAppScreen(
+                userViewModel = userViewModel,
+                motorcycleViewModel = motorcycleViewModel
+            )
+            false -> LoginScreen(
+                userViewModel = userViewModel,
+                motorcycleViewModel = motorcycleViewModel,
+            )
             // null shouldn't happen here, but if it does, you could fallback to SplashScreen or a default.
             null -> SplashScreen()
         }
@@ -68,12 +77,10 @@ fun RootScreen(
 
 @Composable
 fun SplashScreen() {
-    // If you have a background image, place it in drawable and reference here.
-    // e.g. painterResource(R.drawable.splash_background)
     Box(
         modifier = Modifier
             .fillMaxSize()
-         .background(Color(0xFFF9F4E2)) // Alternatively, a plain color
+            .background(MaterialTheme.colorScheme.background) // Using the beige background instead of onBackground
     ) {
         // Content in the center
         Column(
@@ -85,8 +92,9 @@ fun SplashScreen() {
                 text = "MotoPedia",
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary,
-                fontSize = 50.sp
+                color = MaterialTheme.colorScheme.primary, // Gold accent
+                fontSize = 50.sp,
+                textAlign = TextAlign.Center
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -95,9 +103,21 @@ fun SplashScreen() {
             Text(
                 text = "Your Motorcycle Encyclopedia",
                 style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onBackground
+                color = MaterialTheme.colorScheme.secondary, // Using teal as secondary accent
+                textAlign = TextAlign.Center
             )
 
-        }}
-}
+            Spacer(modifier = Modifier.height(40.dp))
 
+            // Optional: Add a small accent element
+            Box(
+                modifier = Modifier
+                    .size(80.dp, 4.dp)
+                    .background(
+                        color = MaterialTheme.colorScheme.tertiary,
+                        shape = RoundedCornerShape(2.dp)
+                    )
+            )
+        }
+    }
+}
