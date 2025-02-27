@@ -8,6 +8,7 @@ import com.example.androidtermprojectmotopedia.repository.MotorcycleRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class MotorcycleViewModel(
@@ -22,9 +23,21 @@ class MotorcycleViewModel(
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
 
+    private val _userMotorcycles = MutableStateFlow<List<Motorcycle>>(emptyList())
+    val userMotorcycles: StateFlow<List<Motorcycle>> = _userMotorcycles.asStateFlow()
+
     init {
         // Optionally load all motorcycles immediately
         loadAllMotorcycles()
+            viewModelScope.launch {
+                repository.getMotorcyclesFlow()
+                    .catch { e -> _errorMessage.value = e.message }
+                    .collect { motorcyclesList ->
+                        _motorcycles.value = motorcyclesList
+                    }
+
+        }
+
     }
 
     /**
@@ -66,7 +79,7 @@ class MotorcycleViewModel(
                     videoUri = videoUri
                 )
                 // After uploading, optionally refresh the list
-                loadAllMotorcycles()
+//                loadAllMotorcycles()
             } catch (e: Exception) {
                 _errorMessage.value = e.message
             }
@@ -82,7 +95,7 @@ class MotorcycleViewModel(
             try {
                 repository.updateMotorcycle(docId, newData)
                 // Optionally refresh
-                loadAllMotorcycles()
+//                loadAllMotorcycles()
             } catch (e: Exception) {
                 _errorMessage.value = e.message
             }
@@ -97,10 +110,25 @@ class MotorcycleViewModel(
             try {
                 repository.requestDeleteMotorcycle(docId)
                 // Optionally refresh
-                loadAllMotorcycles()
+//                loadAllMotorcycles()
             } catch (e: Exception) {
                 _errorMessage.value = e.message
             }
         }
     }
+
+    fun loadMotorcyclesByUserId(userId: String) {
+        viewModelScope.launch {
+            try {
+                repository.getMotorcyclesByUserId(userId)
+                    .catch { e -> _errorMessage.value = e.message }
+                    .collect { motorcyclesList ->
+                        _userMotorcycles.value = motorcyclesList
+                    }
+            } catch (e: Exception) {
+                _errorMessage.value = e.message
+            }
+        }
+    }
+
 }
