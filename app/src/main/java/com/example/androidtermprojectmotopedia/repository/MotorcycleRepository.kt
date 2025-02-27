@@ -47,7 +47,7 @@ class MotorcycleRepository(
         // 3) Create a new Motorcycle object
 
         val dateFormat = java.text.SimpleDateFormat(
-            "MMMM dd, yyyy",
+            "MMMM dd, yyyy 'at' hh:mm:ss a 'UTC'Z",
             java.util.Locale.getDefault()
         )
         val nowString = dateFormat.format(java.util.Date())

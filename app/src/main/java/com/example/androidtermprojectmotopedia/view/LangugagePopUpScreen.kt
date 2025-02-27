@@ -1,5 +1,3 @@
-package com.example.androidtermprojectmotopedia.view
-
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,35 +14,49 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.example.androidtermprojectmotopedia.viewModel.UserViewModel
 
 @Composable
 fun LanguageSelectionDialog(
     currentLanguage: String,
     onDismiss: () -> Unit,
-    onLanguageSelected: (String) -> Unit
+    onLanguageSelected: (String) -> Unit,
+    userViewModel: UserViewModel
 ) {
-    var selectedLanguage by remember { mutableStateOf(currentLanguage) }
+    // Map language codes to their full names
+    val languageMap = mapOf(
+        "en" to "English",
+        "zh-rCN" to "Chinese",
+        "my" to "Myanmar"
+    )
+
+    // Local state holds the selected language code
+    var selectedLanguageCode by remember { mutableStateOf(currentLanguage) }
 
     AlertDialog(
-        onDismissRequest = { onDismiss() },
+        onDismissRequest = onDismiss,
         title = { Text("Select Language") },
         text = {
-            // Radio buttons for each language
-            val languages = listOf("English", "Chinese", "Burmese")
-
             Column {
-                languages.forEach { lang ->
+                // Display radio buttons for each language code
+                languageMap.forEach { (code, fullName) ->
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { selectedLanguage = lang },
+                            .clickable {
+                                selectedLanguageCode = code
+                                userViewModel.setLanguage(code)
+                            },
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         RadioButton(
-                            selected = (selectedLanguage == lang),
-                            onClick = { selectedLanguage = lang }
+                            selected = (selectedLanguageCode == code),
+                            onClick = {
+                                selectedLanguageCode = code
+                                userViewModel.setLanguage(code)
+                            }
                         )
-                        Text(text = lang)
+                        Text(text = fullName)
                     }
                 }
             }
@@ -52,8 +64,8 @@ fun LanguageSelectionDialog(
         confirmButton = {
             Button(
                 onClick = {
-                    onLanguageSelected(selectedLanguage)
-                    onDismiss()
+                    // Return the final code to the caller
+                    onLanguageSelected(selectedLanguageCode)
                 }
             ) {
                 Text("OK")
@@ -66,3 +78,4 @@ fun LanguageSelectionDialog(
         }
     )
 }
+

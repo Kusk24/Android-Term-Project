@@ -1,5 +1,6 @@
 package com.example.androidtermprojectmotopedia.view
 
+import LanguageSelectionDialog
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -25,6 +26,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -44,10 +46,18 @@ fun SettingScreen(
     navController: NavController,
     userViewModel: UserViewModel
 ) {
-    // Add a state to control showing the language dialog
+    // Observe the language from ViewModel (this returns the code: "en", "zh-rCN", or "my")
+    val languageCode by userViewModel.language.observeAsState(initial = "en")
+
+    // A mapping from code to display name
+    val languageMap = mapOf(
+        "en" to "English",
+        "zh-rCN" to "Chinese",
+        "my" to "Myanmar"
+    )
+
+    // State to control showing the language dialog
     var showLanguageDialog by remember { mutableStateOf(false) }
-    // Keep track of the current language (purely UI for now)
-    var currentLanguage by remember { mutableStateOf("English") }
     // Notification toggle
     var notificationChecked by remember { mutableStateOf(true) }
 
@@ -62,7 +72,6 @@ fun SettingScreen(
         Row(
             modifier = Modifier
                 .clickable {
-                    // Navigate to AccountInformationScreen
                     navController.navigate("accountInfo")
                 }
                 .constrainAs(box1) {
@@ -73,7 +82,7 @@ fun SettingScreen(
                 .border(1.dp, Color.Gray, RoundedCornerShape(15.dp))
                 .height(50.dp)
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp), // Slight horizontal padding inside the row
+                .padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -90,7 +99,6 @@ fun SettingScreen(
         Row(
             modifier = Modifier
                 .clickable {
-                    // Show the language dialog
                     showLanguageDialog = true
                 }
                 .constrainAs(box2) {
@@ -111,25 +119,28 @@ fun SettingScreen(
                 tint = Color.Black
             )
             Spacer(modifier = Modifier.width(12.dp))
-            Text("Language: $currentLanguage")
+            // Display the full language name from our map
+            Text(text = "Language: ${languageMap[languageCode] ?: languageCode}")
         }
 
         // Show the language dialog if needed
         if (showLanguageDialog) {
             LanguageSelectionDialog(
-                currentLanguage = currentLanguage,
+                // Pass the actual language code
+                currentLanguage = languageCode,
                 onDismiss = { showLanguageDialog = false },
                 onLanguageSelected = { chosenLang ->
-                    currentLanguage = chosenLang
-                    // TODO: Optionally store in DataStore or call ViewModel
-                }
+                    // This updates preferences via ViewModel
+                    userViewModel.setLanguage(chosenLang)
+                    showLanguageDialog = false
+                },
+                userViewModel = userViewModel
             )
         }
 
         // 3) Row for "Notification"
         Row(
             modifier = Modifier
-                .clickable { /* Could open a notification settings screen, if you want */ }
                 .constrainAs(box3) {
                     top.linkTo(box2.bottom, margin = 50.dp)
                     start.linkTo(parent.start)
@@ -138,6 +149,7 @@ fun SettingScreen(
                 .border(1.dp, Color.Gray, RoundedCornerShape(15.dp))
                 .height(50.dp)
                 .fillMaxWidth()
+                .clickable { /* If you want a detail screen */ }
                 .padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
@@ -150,7 +162,6 @@ fun SettingScreen(
             Spacer(modifier = Modifier.width(12.dp))
             Text(text = stringResource(id = R.string.notification))
             Spacer(modifier = Modifier.weight(1f))
-            // Switch aligned to the end
             Switch(
                 checked = notificationChecked,
                 onCheckedChange = { notificationChecked = it }
@@ -207,10 +218,9 @@ fun SettingScreen(
             Text(text = stringResource(id = R.string.faqs))
         }
 
-        // 6) Log out Button (no icon as requested)
+        // 6) Log out Button
         Button(
             onClick = {
-                // Just call logoutUser, which sets isLoggedIn = false
                 userViewModel.logoutUser()
             },
             colors = ButtonDefaults.buttonColors(
