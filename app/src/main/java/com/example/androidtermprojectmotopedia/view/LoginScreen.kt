@@ -33,6 +33,7 @@ import androidx.navigation.NavController
 import com.example.androidtermprojectmotopedia.model.UserWithId
 import com.example.androidtermprojectmotopedia.repository.UserPreferencesRepository
 import com.example.androidtermprojectmotopedia.repository.UserRepository
+import com.example.androidtermprojectmotopedia.viewModel.MotorcycleViewModel
 import com.example.androidtermprojectmotopedia.viewModel.UserViewModel
 import com.example.androidtermprojectmotopedia.viewModel.UserViewModelFactory
 
@@ -120,7 +121,9 @@ fun LoginPage(
 
 
 @Composable
-fun LoginScreen(userViewModel: UserViewModel) {
+fun LoginScreen(userViewModel: UserViewModel,
+                motorcycleViewModel: MotorcycleViewModel
+) {
     val currentUser by userViewModel.currentUser.collectAsState(initial = null)
     val errorMessage by userViewModel.errorMessage.collectAsState()
 
@@ -145,7 +148,7 @@ fun LoginScreen(userViewModel: UserViewModel) {
         }
     } else {
         // Already logged in
-        MainAppScreen(userViewModel = userViewModel)
+        MainAppScreen(userViewModel = userViewModel, motorcycleViewModel = motorcycleViewModel)
     }
 }
 

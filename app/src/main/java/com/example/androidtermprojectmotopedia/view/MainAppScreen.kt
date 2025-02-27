@@ -12,13 +12,15 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.androidtermprojectmotopedia.viewModel.MotorcycleViewModel
 import com.example.androidtermprojectmotopedia.viewModel.UserViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainAppScreen(userViewModel: UserViewModel, // Add this
-                  modifier: Modifier = Modifier) {
+                  modifier: Modifier = Modifier,
+                  motorcycleViewModel: MotorcycleViewModel) {
 
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -58,9 +60,13 @@ fun MainAppScreen(userViewModel: UserViewModel, // Add this
                 composable("Home") { BrandScreen(modifier = Modifier) }
                 composable("Search") { SearchScreen(modifier = Modifier, onMotorcycleClicked = {}) }
                 composable("Brands") { BrandScreen(modifier = Modifier) }
-                composable("Upload") { UploadScreen(modifier = Modifier, userViewModel) }
+                composable("Upload") { UploadScreen(modifier = Modifier,motorcycleViewModel, userViewModel) }
                 composable("Notification") { NotificationScreen(modifier = Modifier) }
-                composable("Profile") { ProfileScreen(modifier = Modifier, userViewModel) }
+                composable("Profile") { ProfileScreen(
+                    modifier = Modifier,
+                    userViewModel = userViewModel,
+                    motorcycleViewModel = motorcycleViewModel
+                ) }
                 composable("Settings") {
                     SettingScreen(
                         navController = navController,
