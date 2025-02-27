@@ -26,7 +26,7 @@ class UserPreferencesRepository(private val context: Context) {
     }
 
     val language: Flow<String> = context.dataStore.data.map { preferences ->
-        preferences[LANGUAGE] ?: "english"
+        preferences[LANGUAGE] ?: "en"
     }
 
     val darkTheme: Flow<Boolean> = context.dataStore.data.map { preferences ->
