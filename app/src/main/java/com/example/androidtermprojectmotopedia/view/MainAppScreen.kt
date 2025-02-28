@@ -9,9 +9,11 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.androidtermprojectmotopedia.viewModel.MotorcycleViewModel
 import com.example.androidtermprojectmotopedia.viewModel.UserViewModel
 import kotlinx.coroutines.launch
@@ -57,8 +59,32 @@ fun MainAppScreen(userViewModel: UserViewModel, // Add this
                 startDestination = "Home",
                 modifier = Modifier.padding(innerPadding)
             ) {
-                composable("Home") { BrandScreen(modifier = Modifier) }
-                composable("Search") { SearchScreen(modifier = Modifier, onMotorcycleClicked = {}) }
+                composable("Home") {
+                    ArticleListScreen(
+                        modifier = Modifier,
+                        onArticleClick = { docId ->
+                            navController.navigate("detail/$docId")
+                        }
+                    )
+                }
+                composable("Search") {
+                    SearchScreen(
+                        modifier = Modifier,
+                        onMotorcycleClicked = { docId ->
+                            navController.navigate("detail/$docId")
+                        }
+                    )
+                }
+
+                composable(route = "detail/{docId}",
+                    arguments = listOf(navArgument("docId") { type = NavType.StringType })
+                ) { backStackEntry ->
+                    val docId = backStackEntry.arguments?.getString("docId") ?: ""
+                    ArticleDetailScreen(docId = docId)
+
+                }
+
+
                 composable("Brands") { BrandScreen(modifier = Modifier) }
                 composable("Upload") { UploadScreen(modifier = Modifier,motorcycleViewModel, userViewModel) }
                 composable("Notification") { NotificationScreen(modifier = Modifier) }

@@ -128,6 +128,8 @@ dependencies {
     implementation ("androidx.compose.ui:ui-tooling-preview:1.7.8")
     implementation ("androidx.activity:activity-compose:1.7.0")
 
+    //Video Player Dependencies
+    implementation(libs.exoplayer)
 
 //    // Import the Firebase BoM
 //    implementation(platform("com.google.firebase:firebase-bom:33.8.0"))

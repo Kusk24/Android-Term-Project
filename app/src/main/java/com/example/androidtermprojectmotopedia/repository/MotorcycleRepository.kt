@@ -147,6 +147,55 @@ class MotorcycleRepository(
         }
         awaitClose { registration.remove() }
     }
+    suspend fun getMotorcycleById(docId: String): Motorcycle? {
+        val docSnapshot = motorcyclesRef.document(docId).get().await()
+        return if (docSnapshot.exists()) {
+            // Convert the document to a Motorcycle object.
+            // Option 1: Manually map the fields (like your existing code).
+            val brand = docSnapshot.getString("brand") ?: ""
+            val detail = docSnapshot.getString("detail") ?: ""
+            val image = docSnapshot.getString("image") ?: ""
+            val model = docSnapshot.getString("model") ?: ""
+            val posted_by = docSnapshot.getString("posted_by") ?: ""
+            val release_date = docSnapshot.getString("release_date") ?: ""
+            val status = docSnapshot.getString("status") ?: ""
+            val video = docSnapshot.getString("video") ?: ""
+            val requestDelete = docSnapshot.getBoolean("request_delete") ?: false
+            val uploadedDate: String = when (val dateField = docSnapshot.get("uploaded_date")) {
+                is String -> dateField
+                is com.google.firebase.Timestamp -> {
+                    val date = dateField.toDate()
+                    val dateFormat = java.text.SimpleDateFormat(
+                        "MMMM dd, yyyy 'at' hh:mm:ss a 'UTC'Z",
+                        java.util.Locale.getDefault()
+                    )
+                    dateFormat.format(date)
+                }
+                else -> ""
+            }
+
+            Motorcycle(
+                brand = brand,
+                detail = detail,
+                image = image,
+                model = model,
+                posted_by = posted_by,
+                release_date = release_date,
+                status = status,
+                video = video,
+                docId = docSnapshot.id,
+                request_delete = requestDelete,
+                uploaded_date = uploadedDate
+            )
+
+            // Option 2 (if your data class structure is simpler):
+            // docSnapshot.toObject(Motorcycle::class.java)?.copy(docId = docSnapshot.id)
+
+        } else {
+            null
+        }
+    }
+
 }
 
 /**

@@ -17,6 +17,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,21 +27,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.example.androidtermprojectmotopedia.model.Motorcycle
+import com.example.androidtermprojectmotopedia.viewModel.MotorcycleViewModel
 
 @Composable
 fun SearchScreen(
     modifier: Modifier = Modifier,
-    onMotorcycleClicked: (Motorcycle) -> Unit
+    onMotorcycleClicked: (String) -> Unit
 ) {
     val pageSize = 5 // Fixed items per page
     var currentPage by remember { mutableStateOf(0) } // Track the current page
     var searchQuery by remember { mutableStateOf("") } // User's search query
 
-//    val allMotorcycles = demoMotor.flatMap { it.models } // Flatten all motorcycles
-    val allMotorcycles = demoMotor
-    val filteredMotorcycles = allMotorcycles.filter {
+    val viewModel: MotorcycleViewModel = viewModel()
+    val motorcycles by viewModel.motorcycles.collectAsState()
+
+    val filteredMotorcycles = motorcycles.filter {
         it.model.contains(searchQuery, ignoreCase = true)
     }
     val totalPages = (filteredMotorcycles.size + pageSize - 1) / pageSize
@@ -50,12 +54,11 @@ fun SearchScreen(
         .take(pageSize)
 
     Column(modifier = modifier.padding(16.dp)) {
-        // 🔹 Search Input
         TextField(
             value = searchQuery,
             onValueChange = {
                 searchQuery = it
-                currentPage = 0 // Reset to first page when search changes
+                currentPage = 0
             },
             label = { Text("Search Motorcycles") },
             modifier = Modifier.fillMaxWidth()
@@ -72,7 +75,7 @@ fun SearchScreen(
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { onMotorcycleClicked(motorcycle) }
+                        .clickable { onMotorcycleClicked(motorcycle.docId) }
                 ) {
                     Row(modifier = Modifier.padding(16.dp)) {
                         AsyncImage(
@@ -94,7 +97,6 @@ fun SearchScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // 🔹 Pagination Controls
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
