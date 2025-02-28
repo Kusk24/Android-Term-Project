@@ -1,6 +1,7 @@
 package com.example.androidtermprojectmotopedia.view
 
 import LanguageSelectionDialog
+import android.app.Activity
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -33,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -46,13 +48,14 @@ fun SettingScreen(
     navController: NavController,
     userViewModel: UserViewModel
 ) {
+    val context = LocalContext.current
     // Observe the language from ViewModel (this returns the code: "en", "zh-rCN", or "my")
     val languageCode by userViewModel.language.observeAsState(initial = "en")
 
     // A mapping from code to display name
     val languageMap = mapOf(
         "en" to "English",
-        "zh-rCN" to "Chinese",
+        "zh-CN" to "Chinese",
         "my" to "Myanmar"
     )
 
@@ -120,7 +123,7 @@ fun SettingScreen(
             )
             Spacer(modifier = Modifier.width(12.dp))
             // Display the full language name from our map
-            Text(text = "Language: ${languageMap[languageCode] ?: languageCode}")
+            Text(text = stringResource(R.string.language) + ": ${languageMap[languageCode] ?: languageCode}")
         }
 
         // Show the language dialog if needed
@@ -133,6 +136,8 @@ fun SettingScreen(
                     // This updates preferences via ViewModel
                     userViewModel.setLanguage(chosenLang)
                     showLanguageDialog = false
+
+                    (context as? Activity)?.recreate()
                 },
                 userViewModel = userViewModel
             )
