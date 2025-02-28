@@ -26,6 +26,9 @@ class MotorcycleViewModel(
     private val _userMotorcycles = MutableStateFlow<List<Motorcycle>>(emptyList())
     val userMotorcycles: StateFlow<List<Motorcycle>> = _userMotorcycles.asStateFlow()
 
+    private val _selectedMotorcycle = MutableStateFlow<Motorcycle?>(null)
+    val selectedMotorcycle: StateFlow<Motorcycle?> = _selectedMotorcycle
+
     init {
         // Optionally load all motorcycles immediately
         loadAllMotorcycles()
@@ -125,6 +128,16 @@ class MotorcycleViewModel(
                     .collect { motorcyclesList ->
                         _userMotorcycles.value = motorcyclesList
                     }
+            } catch (e: Exception) {
+                _errorMessage.value = e.message
+            }
+        }
+    }
+    fun fetchMotorcycleById(docId: String) {
+        viewModelScope.launch {
+            try {
+                val motorcycle = repository.getMotorcycleById(docId)
+                _selectedMotorcycle.value = motorcycle
             } catch (e: Exception) {
                 _errorMessage.value = e.message
             }

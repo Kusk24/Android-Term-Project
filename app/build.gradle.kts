@@ -132,4 +132,7 @@ dependencies {
 
     implementation ("androidx.compose.material3:material3-window-size-class:1.3.1")
     implementation ("com.google.accompanist:accompanist-adaptive:0.34.0")
+    
+    implementation(libs.exoplayer)
+
 }

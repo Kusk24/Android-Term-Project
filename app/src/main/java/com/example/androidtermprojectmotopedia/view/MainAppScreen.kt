@@ -11,9 +11,11 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.androidtermprojectmotopedia.viewModel.MotorcycleViewModel
 import com.example.androidtermprojectmotopedia.viewModel.UserViewModel
 import kotlinx.coroutines.launch
@@ -62,16 +64,19 @@ fun MainAppScreen(
                 modifier = Modifier.padding(innerPadding)
             ) {
                 composable("Home") {
-                    // Pass windowSizeClass down to BrandScreen
-                    BrandScreen(
-                        windowSizeClass = windowSizeClass,
-                        modifier = Modifier
+                    ArticleListScreen(
+                        modifier = Modifier,
+                        onArticleClick = { docId ->
+                            navController.navigate("detail/$docId")
+                        }
                     )
                 }
                 composable("Search") {
                     SearchScreen(
                         modifier = Modifier,
-                        onMotorcycleClicked = {}
+                        onMotorcycleClicked = { docId ->
+                            navController.navigate("detail/$docId")
+                        }
                     )
                 }
                 composable("Brands") {
@@ -79,6 +84,13 @@ fun MainAppScreen(
                         windowSizeClass = windowSizeClass,
                         modifier = Modifier
                     )
+                }
+                composable(route = "detail/{docId}",
+                    arguments = listOf(navArgument("docId") { type = NavType.StringType })
+                ) { backStackEntry ->
+                    val docId = backStackEntry.arguments?.getString("docId") ?: ""
+                    ArticleDetailScreen(docId = docId)
+
                 }
                 composable("Upload") {
                     UploadScreen(
