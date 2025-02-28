@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -19,7 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -30,6 +30,7 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun RootScreen(
+    widthSizeClass: WindowWidthSizeClass,
     userViewModel: UserViewModel,
     modifier: Modifier = Modifier,
     motorcycleViewModel: MotorcycleViewModel
@@ -62,12 +63,15 @@ fun RootScreen(
         when (isLoggedIn) {
             true -> MainAppScreen(
                 userViewModel = userViewModel,
-                motorcycleViewModel = motorcycleViewModel
+                motorcycleViewModel = motorcycleViewModel,
+                windowSizeClass = widthSizeClass,
+                modifier = modifier,
             )
             false -> LoginScreen(
                 userViewModel = userViewModel,
                 motorcycleViewModel = motorcycleViewModel,
-            )
+                windowSizeClass = widthSizeClass,
+                )
             // null shouldn't happen here, but if it does, you could fallback to SplashScreen or a default.
             null -> SplashScreen()
         }

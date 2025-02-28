@@ -7,13 +7,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -23,19 +22,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import com.example.androidtermprojectmotopedia.model.UserWithId
-import com.example.androidtermprojectmotopedia.repository.UserPreferencesRepository
-import com.example.androidtermprojectmotopedia.repository.UserRepository
 import com.example.androidtermprojectmotopedia.viewModel.MotorcycleViewModel
 import com.example.androidtermprojectmotopedia.viewModel.UserViewModel
-import com.example.androidtermprojectmotopedia.viewModel.UserViewModelFactory
 
 @Composable
 fun LoginPage(
@@ -121,8 +111,10 @@ fun LoginPage(
 
 
 @Composable
-fun LoginScreen(userViewModel: UserViewModel,
-                motorcycleViewModel: MotorcycleViewModel
+fun LoginScreen(
+    userViewModel: UserViewModel,
+    motorcycleViewModel: MotorcycleViewModel,
+    windowSizeClass: WindowWidthSizeClass
 ) {
     val currentUser by userViewModel.currentUser.collectAsState(initial = null)
     val errorMessage by userViewModel.errorMessage.collectAsState()
@@ -148,7 +140,9 @@ fun LoginScreen(userViewModel: UserViewModel,
         }
     } else {
         // Already logged in
-        MainAppScreen(userViewModel = userViewModel, motorcycleViewModel = motorcycleViewModel)
+        MainAppScreen(userViewModel = userViewModel, motorcycleViewModel = motorcycleViewModel,
+            windowSizeClass = windowSizeClass,
+        )
     }
 }
 
