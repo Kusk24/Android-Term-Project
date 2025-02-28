@@ -15,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
@@ -50,11 +52,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         setContent {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+            val widthSizeClass = calculateWindowSizeClass(this).widthSizeClass
+            Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
 
                     val context = LocalContext.current
                     val userPreferencesRepository = remember { UserPreferencesRepository(context) }
@@ -69,7 +74,8 @@ class MainActivity : AppCompatActivity() {
                         darkTheme = isDarkTheme
                     ) {
                         // Your composable content
-                        RootScreen(userViewModel = userViewModel, motorcycleViewModel = motorcycleViewModel, modifier = Modifier.padding(innerPadding))
+                        RootScreen(widthSizeClass = widthSizeClass,
+                            userViewModel = userViewModel, motorcycleViewModel = motorcycleViewModel, modifier = Modifier.padding(innerPadding))
                     }
             }
         }

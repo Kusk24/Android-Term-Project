@@ -12,8 +12,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -58,8 +63,11 @@ fun SearchScreen(
             value = searchQuery,
             onValueChange = {
                 searchQuery = it
-                currentPage = 0
-            },
+                currentPage = 0 
+            }, trailingIcon = { Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = null) },
+
             label = { Text("Search Motorcycles") },
             modifier = Modifier.fillMaxWidth()
         )
@@ -75,7 +83,9 @@ fun SearchScreen(
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { onMotorcycleClicked(motorcycle.docId) }
+                        .clickable { onMotorcycleClicked(motorcycle.docId) },
+                    elevation = CardDefaults.cardElevation(6.dp)
+
                 ) {
                     Row(modifier = Modifier.padding(16.dp)) {
                         AsyncImage(

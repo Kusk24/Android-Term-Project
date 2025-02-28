@@ -9,6 +9,8 @@ plugins {
     id("com.google.gms.google-services")
 
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+
+    id("kotlin-parcelize")
 }
 
 android {
@@ -128,16 +130,9 @@ dependencies {
     implementation ("androidx.compose.ui:ui-tooling-preview:1.7.8")
     implementation ("androidx.activity:activity-compose:1.7.0")
 
-    //Video Player Dependencies
+    implementation ("androidx.compose.material3:material3-window-size-class:1.3.1")
+    implementation ("com.google.accompanist:accompanist-adaptive:0.34.0")
+    
     implementation(libs.exoplayer)
 
-//    // Import the Firebase BoM
-//    implementation(platform("com.google.firebase:firebase-bom:33.8.0"))
-//
-//    // TODO: Add the dependencies for Firebase products you want to use
-//    // When using the BoM, don't specify versions in Firebase dependencies
-//    implementation("com.google.firebase:firebase-analytics")
-//
-//    // Add the dependencies for any other desired Firebase products
-//    // https://firebase.google.com/docs/android/setup#available-libraries
 }
