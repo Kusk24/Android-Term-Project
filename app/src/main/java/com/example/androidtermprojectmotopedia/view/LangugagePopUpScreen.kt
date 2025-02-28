@@ -26,7 +26,7 @@ fun LanguageSelectionDialog(
     // Map language codes to their full names
     val languageMap = mapOf(
         "en" to "English",
-        "zh-rCN" to "Chinese",
+        "zh-CN" to "Chinese",
         "my" to "Myanmar"
     )
 

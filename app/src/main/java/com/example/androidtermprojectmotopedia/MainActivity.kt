@@ -1,7 +1,9 @@
 package com.example.androidtermprojectmotopedia
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -22,6 +24,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.androidtermprojectmotopedia.repository.UserPreferencesRepository
 import com.example.androidtermprojectmotopedia.repository.UserRepository
+import com.example.androidtermprojectmotopedia.repository.dataStore
 import com.example.androidtermprojectmotopedia.ui.theme.AndroidTermProjectMotopediaTheme
 import com.example.androidtermprojectmotopedia.view.RootScreen
 import com.example.androidtermprojectmotopedia.viewModel.MotorcycleViewModel
@@ -29,6 +32,9 @@ import com.example.androidtermprojectmotopedia.viewModel.UserViewModel
 import com.example.androidtermprojectmotopedia.viewModel.UserViewModelFactory
 import com.google.firebase.messaging.ktx.messaging
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
@@ -115,6 +121,30 @@ class MainActivity : AppCompatActivity() {
             Log.d("MainActivity", "FCM Registration token: $token")
             Toast.makeText(this, "FCM Registration token: $token", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        // 1) Read the stored language code from DataStore synchronously
+        val languageCode = runBlocking {
+            // Use the repository’s method
+            val repo = UserPreferencesRepository(newBase)
+            repo.getCurrentLanguage()
+        }
+        android.util.Log.d("MainActivity", "attachBaseContext: languageCode = $languageCode")
+
+        // 2) Create/update a configuration with the chosen locale
+        val locale = Locale.forLanguageTag(languageCode)
+        Locale.setDefault(locale)
+        val config = Configuration(newBase.resources.configuration).apply {
+            setLocale(locale)
+            setLayoutDirection(locale)
+        }
+
+        // 3) Wrap the newBase with this updated configuration
+        val localizedContext = newBase.createConfigurationContext(config)
+
+        // 4) Pass it up the chain
+        super.attachBaseContext(localizedContext)
     }
 }
 
