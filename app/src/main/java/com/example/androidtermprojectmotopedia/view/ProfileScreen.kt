@@ -10,6 +10,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardElevation
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -187,18 +189,18 @@ fun MotorcycleDetailCard(
     }
 
     // Card background color (slightly off-white)
-    val cardBackground = Color(0xFFF5F5F5)
+//    val cardBackground = Color(0xFFF5F5F5)
 
     Card(
         modifier = modifier
             .fillMaxWidth(),
         border = BorderStroke(1.dp, Color.LightGray),
+        elevation = CardDefaults.cardElevation(6.dp)
         // Optionally you can set a shape if you want
         // shape = RoundedCornerShape(12.dp),
     ) {
         Column(
             modifier = Modifier
-                .background(cardBackground)
                 .padding(16.dp)
         ) {
             // Row: image on left, status on right
@@ -248,7 +250,6 @@ fun MotorcycleDetailCard(
             Text(
                 text = "Uploaded: ${motorcycle.uploaded_date}",
                 fontSize = 12.sp,
-                color = Color.DarkGray
             )
 
             Spacer(modifier = Modifier.height(12.dp))

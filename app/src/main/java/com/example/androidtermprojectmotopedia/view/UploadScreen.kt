@@ -200,7 +200,7 @@ fun UploadScreen(modifier: Modifier = Modifier, motorcycleViewModel: MotorcycleV
                 Text(text = convertMillisToDate(selectedDate))
                 Spacer(modifier = Modifier.weight(1f))
                 Button(onClick = { showModalInput = true }) {
-                    Text("Choose Date")
+                    Text("Choose Release Date")
                 }
             }
 

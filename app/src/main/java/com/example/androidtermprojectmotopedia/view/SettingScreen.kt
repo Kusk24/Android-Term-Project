@@ -91,9 +91,7 @@ fun SettingScreen(
         ) {
             Icon(
                 imageVector = Icons.Filled.Person,
-                contentDescription = null,
-                tint = Color.Black
-            )
+                contentDescription = null)
             Spacer(modifier = Modifier.width(12.dp))
             Text(text = stringResource(id = R.string.account_info))
         }
@@ -118,9 +116,7 @@ fun SettingScreen(
         ) {
             Icon(
                 imageVector = Icons.Filled.Language,
-                contentDescription = null,
-                tint = Color.Black
-            )
+                contentDescription = null)
             Spacer(modifier = Modifier.width(12.dp))
             // Display the full language name from our map
             Text(text = stringResource(R.string.language) + ": ${languageMap[languageCode] ?: languageCode}")
@@ -161,9 +157,7 @@ fun SettingScreen(
         ) {
             Icon(
                 imageVector = Icons.Filled.Notifications,
-                contentDescription = null,
-                tint = Color.Black
-            )
+                contentDescription = null)
             Spacer(modifier = Modifier.width(12.dp))
             Text(text = stringResource(id = R.string.notification))
             Spacer(modifier = Modifier.weight(1f))
@@ -191,9 +185,7 @@ fun SettingScreen(
         ) {
             Icon(
                 imageVector = Icons.Filled.HelpOutline,
-                contentDescription = null,
-                tint = Color.Black
-            )
+                contentDescription = null)
             Spacer(modifier = Modifier.width(12.dp))
             Text(text = stringResource(id = R.string.help_and_support))
         }
@@ -216,9 +208,7 @@ fun SettingScreen(
         ) {
             Icon(
                 imageVector = Icons.Filled.QuestionAnswer,
-                contentDescription = null,
-                tint = Color.Black
-            )
+                contentDescription = null)
             Spacer(modifier = Modifier.width(12.dp))
             Text(text = stringResource(id = R.string.faqs))
         }
