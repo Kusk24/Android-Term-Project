@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Android Term Project (Motopedia)</string>
     <string name="profile_name">Profile Name</string>
-    <string name="uses">Uses</string>
+    <string name="usage">Features</string>
     <string name="home">Home</string>
     <string name="search">Search</string>
     <string name="explore_brand">Explore Brands</string>

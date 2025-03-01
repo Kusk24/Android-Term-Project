@@ -1,7 +1,6 @@
 package com.example.androidtermprojectmotopedia.view
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -21,6 +20,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
@@ -36,15 +36,18 @@ import kotlinx.coroutines.launch
 fun DetailedDrawer(
     navController: NavController,
     drawerState: DrawerState,
-    userViewModel: UserViewModel
+    userViewModel: UserViewModel,
+    onItemSelected: (String) -> Unit
 ) {
+
     val scope = rememberCoroutineScope()
     var selectedItem by remember { mutableStateOf("Home") }
     val currentTheme by userViewModel.darkTheme.observeAsState(false)
     var currentUser = userViewModel.currentUser.collectAsState().value
 
     ModalDrawerSheet(
-        drawerContainerColor = (MaterialTheme.colorScheme.background)
+        drawerContainerColor = (MaterialTheme.colorScheme.background),
+        modifier = Modifier.width(300.dp)  // <-- fix the width
     ) {
         Column(
             modifier = Modifier
@@ -53,7 +56,7 @@ fun DetailedDrawer(
         ) {
             Spacer(Modifier.height(12.dp))
             Text(
-                "MotoPedia",
+                text = "MotoPedia",
                 modifier = Modifier.padding(16.dp),
                 style = MaterialTheme.typography.titleLarge
             )
@@ -80,7 +83,8 @@ fun DetailedDrawer(
                             .border(
                                 border = BorderStroke(1.dp, Color.Black),
                                 shape = RoundedCornerShape(50.dp)
-                            )
+                            ),
+                        contentScale  = ContentScale.Crop,
                     )
                 }
             }
@@ -107,7 +111,7 @@ fun DetailedDrawer(
 
             // "Uses" Section
             Text(
-                text = stringResource(id = R.string.uses),
+                text = stringResource(id = R.string.usage),
                 modifier = Modifier.padding(16.dp),
                 style = MaterialTheme.typography.titleMedium
             )
@@ -121,6 +125,7 @@ fun DetailedDrawer(
                     scope.launch { drawerState.close() }
                     // Navigate to "Home"
                     navController.navigate("Home")
+                    onItemSelected("Home")
                 }
             )
             NavigationDrawerItem(
@@ -131,6 +136,7 @@ fun DetailedDrawer(
                     selectedItem = "Search"
                     scope.launch { drawerState.close() }
                     navController.navigate("Search")
+                    onItemSelected("Search")
                 }
             )
             NavigationDrawerItem(
@@ -141,6 +147,7 @@ fun DetailedDrawer(
                     selectedItem = "Brands"
                     scope.launch { drawerState.close() }
                     navController.navigate("Brands")
+                    onItemSelected("Brands")
                 }
             )
             NavigationDrawerItem(
@@ -151,6 +158,7 @@ fun DetailedDrawer(
                     selectedItem = "Upload"
                     scope.launch { drawerState.close() }
                     navController.navigate("Upload")
+                    onItemSelected("Upload")
                 }
             )
             NavigationDrawerItem(
@@ -161,6 +169,7 @@ fun DetailedDrawer(
                     selectedItem = "Notification"
                     scope.launch { drawerState.close() }
                     navController.navigate("Notification")
+                    onItemSelected("Notification")
                 }
             )
 
@@ -181,6 +190,7 @@ fun DetailedDrawer(
                     selectedItem = "Profile"
                     scope.launch { drawerState.close() }
                     navController.navigate("Profile")
+                    onItemSelected("Profile")
                 }
             )
             NavigationDrawerItem(
@@ -191,6 +201,7 @@ fun DetailedDrawer(
                     selectedItem = "Settings"
                     scope.launch { drawerState.close() }
                     navController.navigate("Settings")
+                    onItemSelected("Settings")
                 }
             )
 
@@ -223,27 +234,6 @@ fun DetailedDrawer(
             }
             Spacer(Modifier.height(12.dp))
 
-            // Log out (optional)
-//            NavigationDrawerItem(
-//                label = { Text("Log out") },
-//                selected = false,
-//                icon = { /* e.g. Icon(Icons.Default.ExitToApp, contentDescription = null) */ },
-//                onClick = {
-//                    scope.launch { drawerState.close() }
-//                    // Example: navigate to Login and clear back stack
-//                    navController.navigate("Login") {
-//                        popUpTo("Home") { inclusive = true }
-//                    }
-//                },
-//                colors = NavigationDrawerItemDefaults.colors(
-//                    selectedContainerColor = Color.Transparent,
-//                    unselectedContainerColor = Color.Transparent,
-//                    selectedIconColor = Color.Red,
-//                    unselectedIconColor = Color.Red,
-//                    selectedTextColor = Color.Red,
-//                    unselectedTextColor = Color.Red,
-//                )
-//            )
         }
     }
 }

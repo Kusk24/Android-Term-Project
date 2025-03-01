@@ -27,31 +27,41 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.example.androidtermprojectmotopedia.model.Notification
+import com.example.androidtermprojectmotopedia.ui.backgrounds.CurlyLineBackground
+import com.example.androidtermprojectmotopedia.ui.backgrounds.CurlyLineBackgroundVariant1
+import com.example.androidtermprojectmotopedia.ui.backgrounds.CurlyLineBackgroundVariant2
+import com.example.androidtermprojectmotopedia.ui.backgrounds.CurlyLineBackgroundVariant3
+import com.example.androidtermprojectmotopedia.ui.backgrounds.DiagonalGradientBackground
+import com.example.androidtermprojectmotopedia.ui.backgrounds.LayeredWavesBackground
 import com.example.androidtermprojectmotopedia.viewModel.NotificationViewModel
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 
 @Composable
 fun NotificationScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val viewModel: NotificationViewModel = viewModel()
     val notificationList = viewModel.liveNotification.observeAsState().value.orEmpty()
 
-    LazyColumn(modifier = modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-        items(
-            items = notificationList,
-            key = { it.id }
-        ) { notification ->
-            Spacer(modifier = Modifier.height(8.dp))
-            CustomSwipeToDismissNotificationItem(
-                notification = notification,
-                onDismissed = {
-                    // Remove the notification from your ViewModel/DB
-                    viewModel.deleteMessages(notification)
-                }
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+    Box(Modifier.fillMaxSize()) {
+        DiagonalGradientBackground()
+
+        LazyColumn(modifier = modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp)) {
+            items(
+                items = notificationList,
+                key = { it.id }
+            ) { notification ->
+                Spacer(modifier = Modifier.height(8.dp))
+                CustomSwipeToDismissNotificationItem(
+                    notification = notification,
+                    onDismissed = {
+                        // Remove the notification from your ViewModel/DB
+                        viewModel.deleteMessages(notification)
+                    }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
         }
     }
 }
@@ -146,7 +156,9 @@ fun NotificationItemUI(notification: Notification) {
     Card(
         shape = MaterialTheme.shapes.medium,
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            MaterialTheme.colorScheme.surfaceVariant)
     ) {
         ConstraintLayout(
             modifier = Modifier

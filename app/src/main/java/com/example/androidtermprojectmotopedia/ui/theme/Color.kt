@@ -45,6 +45,7 @@ val LightBeige = Color(0xFFFAF5E3)       // Lightest beige (background variation
 val GoldAccent = Color(0xFFA97C0E)       // Gold accent (your OliveAccent)
 val TealAccent = Color(0xFF4A7B82)       // Teal accent
 val TertiaryAccent = Color(0xFFB7925F)   // Warm tertiary accent
+val CardLight = Color(0xFFFBF8F0)
 
 // Dark Mode - Deep charcoal with rich accents
 val DarkBackground = Color(0xFF121212)   // Deep black background
@@ -55,3 +56,4 @@ val DarkGrayShade = Color(0xFF292929)    // Slightly lighter dark gray
 val GoldAccentDark = Color(0xFFB98C1E)   // Brighter gold for dark mode visibility
 val TealAccentDark = Color(0xFF5B8F96)   // Muted teal accent for dark mode
 val TertiaryAccentDark = Color(0xFFC4A676) // Muted warm accent for dark mode
+val CardDark = Color(0xFF2C2C2C)         // A medium-dark gray for card backgrounds

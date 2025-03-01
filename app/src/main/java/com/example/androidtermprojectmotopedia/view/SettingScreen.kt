@@ -38,8 +38,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.androidtermprojectmotopedia.R
+import com.example.androidtermprojectmotopedia.viewModel.NotificationViewModel
 import com.example.androidtermprojectmotopedia.viewModel.UserViewModel
 
 @Composable
@@ -48,6 +50,7 @@ fun SettingScreen(
     navController: NavController,
     userViewModel: UserViewModel
 ) {
+    val notificationViewModel: NotificationViewModel = viewModel()
     val context = LocalContext.current
     // Observe the language from ViewModel (this returns the code: "en", "zh-rCN", or "my")
     val languageCode by userViewModel.language.observeAsState(initial = "en")
@@ -62,7 +65,7 @@ fun SettingScreen(
     // State to control showing the language dialog
     var showLanguageDialog by remember { mutableStateOf(false) }
     // Notification toggle
-    var notificationChecked by remember { mutableStateOf(true) }
+    val notificationChecked by userViewModel.notiPermission.observeAsState(initial = true)
 
     ConstraintLayout(
         modifier = Modifier
@@ -139,7 +142,6 @@ fun SettingScreen(
             )
         }
 
-        // 3) Row for "Notification"
         Row(
             modifier = Modifier
                 .constrainAs(box3) {
@@ -150,20 +152,27 @@ fun SettingScreen(
                 .border(1.dp, Color.Gray, RoundedCornerShape(15.dp))
                 .height(50.dp)
                 .fillMaxWidth()
-                .clickable { /* If you want a detail screen */ }
                 .padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
                 imageVector = Icons.Filled.Notifications,
-                contentDescription = null)
+                contentDescription = null
+            )
             Spacer(modifier = Modifier.width(12.dp))
             Text(text = stringResource(id = R.string.notification))
             Spacer(modifier = Modifier.weight(1f))
             Switch(
                 checked = notificationChecked,
-                onCheckedChange = { notificationChecked = it }
+                onCheckedChange = { newValue ->
+                    userViewModel.setNotiPermission(newValue)
+                    if (newValue) {
+                        notificationViewModel.subscribeToTopic()
+                    } else {
+                        notificationViewModel.unsubscribeFromTopic()
+                    }
+                }
             )
         }
 
@@ -219,8 +228,8 @@ fun SettingScreen(
                 userViewModel.logoutUser()
             },
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Transparent,
-                contentColor = Color.Red
+                containerColor = Color.Red,
+                contentColor = Color.White
             ),
             border = BorderStroke(1.dp, Color.Red),
             modifier = Modifier.constrainAs(box6) {

@@ -12,6 +12,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -23,18 +24,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.androidtermprojectmotopedia.repository.UserPreferencesRepository
 import com.example.androidtermprojectmotopedia.repository.UserRepository
-import com.example.androidtermprojectmotopedia.repository.dataStore
 import com.example.androidtermprojectmotopedia.ui.theme.AndroidTermProjectMotopediaTheme
 import com.example.androidtermprojectmotopedia.view.RootScreen
 import com.example.androidtermprojectmotopedia.viewModel.MotorcycleViewModel
+import com.example.androidtermprojectmotopedia.viewModel.NotificationViewModel
 import com.example.androidtermprojectmotopedia.viewModel.UserViewModel
 import com.example.androidtermprojectmotopedia.viewModel.UserViewModelFactory
 import com.google.firebase.messaging.ktx.messaging
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.Locale
 
@@ -75,7 +77,9 @@ class MainActivity : AppCompatActivity() {
                     ) {
                         // Your composable content
                         RootScreen(widthSizeClass = widthSizeClass,
-                            userViewModel = userViewModel, motorcycleViewModel = motorcycleViewModel, modifier = Modifier.padding(innerPadding))
+                            userViewModel = userViewModel,
+                            motorcycleViewModel = motorcycleViewModel,
+                            modifier = Modifier.padding(innerPadding))
                     }
             }
         }
@@ -90,8 +94,12 @@ class MainActivity : AppCompatActivity() {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
                 == PackageManager.PERMISSION_GRANTED
             ) {
-                // Permission already granted; proceed with Firebase messaging initialization.
-                initializeFirebaseMessaging()
+                lifecycleScope.launch {
+                    val userPreferencesRepository = UserPreferencesRepository(this@MainActivity)
+                    userPreferencesRepository.setNotiPermission(true)
+                    // Permission already granted; proceed with Firebase messaging initialization.
+                    initializeFirebaseMessaging()
+                }
             } else {
                 // Request the permission.
                 requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)

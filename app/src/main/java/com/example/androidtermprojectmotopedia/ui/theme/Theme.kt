@@ -34,20 +34,6 @@ import androidx.compose.ui.platform.LocalContext
 //    */
 //)
 
-private val DarkColorScheme = darkColorScheme(
-    primary = GoldAccentDark,        // Gold accent
-    secondary = TealAccentDark,      // Teal accent
-    tertiary = TertiaryAccentDark,   // Warm accent
-
-    background = DarkBackground,     // Deep black background
-    surface = DarkSurface,           // Dark surface for cards/modals
-    onPrimary = Color.Black,         // Text on primary elements
-    onSecondary = Color.Black,
-    onTertiary = Color.Black,
-    onBackground = LightGrayText,    // Light gray text on background
-    onSurface = LightGrayText        // Light gray text on surfaces
-)
-
 private val LightColorScheme = lightColorScheme(
     primary = GoldAccent,           // Gold accent
     secondary = TealAccent,         // Teal accent
@@ -59,8 +45,27 @@ private val LightColorScheme = lightColorScheme(
     onSecondary = Color.White,
     onTertiary = Color.White,
     onBackground = DarkGray,
-    onSurface = DarkGray
+    onSurface = DarkGray,
+
+    surfaceVariant = CardLight, // A custom, soft light color for cards, for example
 )
+
+private val DarkColorScheme = darkColorScheme(
+    primary = GoldAccentDark,        // Gold accent
+    secondary = TealAccentDark,      // Teal accent
+    tertiary = TertiaryAccentDark,   // Warm accent
+
+    background = DarkBackground,     // Deep black background
+    surface = DarkSurface,           // Dark surface for cards/modals
+    onPrimary = Color.Black,         // Text on primary elements
+    onSecondary = Color.Black,
+    onTertiary = Color.Black,
+    onBackground = LightGrayText,    // Light gray text on background
+    onSurface = LightGrayText,        // Light gray text on surfaces
+
+    surfaceVariant = CardDark, // A custom, soft light color for cards, for example
+)
+
 
 @Composable
 fun AndroidTermProjectMotopediaTheme(

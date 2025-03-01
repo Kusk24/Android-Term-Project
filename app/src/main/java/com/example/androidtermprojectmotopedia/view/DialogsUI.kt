@@ -76,15 +76,20 @@ fun EditMotorcycleDialog(
                 )
                 Spacer(Modifier.height(8.dp))
 
+                // Make the article field bigger:
                 OutlinedTextField(
                     value = detail,
                     onValueChange = { detail = it },
                     label = { Text("Article / Detail") },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(120.dp),
-                    maxLines = 4
+                        // Option A: Use a fixed taller height
+                        .height(200.dp),
+                    // Option B: Or let lines expand with minLines/maxLines
+                    // minLines = 5,
+                    // maxLines = 10
                 )
+
                 Spacer(Modifier.height(16.dp))
 
                 Row(
@@ -96,7 +101,6 @@ fun EditMotorcycleDialog(
                     }
                     Spacer(Modifier.width(8.dp))
                     Button(onClick = {
-                        // Create an updated Motorcycle
                         val updated = motorcycle.copy(
                             brand = brand,
                             model = model,
@@ -132,6 +136,18 @@ fun ConfirmDeleteDialog(
             TextButton(onClick = onDismiss) {
                 androidx.compose.material3.Text("Cancel")
             }
+        }
+    )
+}
+
+@Composable
+fun ErrorDialog(title: String, text: String, onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(title) },
+        text = { Text(text) },
+        confirmButton = {
+            TextButton(onClick = onDismiss) { Text("OK") }
         }
     )
 }

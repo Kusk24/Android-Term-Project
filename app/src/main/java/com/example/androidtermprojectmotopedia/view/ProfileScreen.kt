@@ -13,17 +13,21 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CardElevation
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.example.androidtermprojectmotopedia.model.Motorcycle
+import com.example.androidtermprojectmotopedia.ui.backgrounds.ProfilePageAnimatedBackground
 import com.example.androidtermprojectmotopedia.viewModel.MotorcycleViewModel
 import com.example.androidtermprojectmotopedia.viewModel.UserViewModel
 
@@ -47,10 +51,12 @@ fun ProfileScreen(
         }
     }
 
+    Box(modifier = Modifier.fillMaxSize()){
+        ProfilePageAnimatedBackground()
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // 1) Profile Image
@@ -65,8 +71,9 @@ fun ProfileScreen(
                 .border(
                     border = BorderStroke(1.dp, Color.Black),
                     shape = RoundedCornerShape(50.dp)
-                )
-        )
+                ),
+            contentScale  = ContentScale.Crop,
+            )
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -81,7 +88,6 @@ fun ProfileScreen(
 
         HorizontalDivider(
             thickness = 1.dp,
-            color = Color.Black,
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -103,6 +109,7 @@ fun ProfileScreen(
             motorcycles = userMotorcycles,
         )
 
+    }
     }
 }
 
@@ -128,7 +135,8 @@ fun MotorcycleListScreen(
                 val updatedData = mapOf(
                     "brand" to updatedMotorcycle.brand,
                     "model" to updatedMotorcycle.model,
-                    "detail" to updatedMotorcycle.detail
+                    "detail" to updatedMotorcycle.detail,
+                    "status" to "pending"
                     // you can omit or add other fields
                 )
 
@@ -198,6 +206,7 @@ fun MotorcycleDetailCard(
         elevation = CardDefaults.cardElevation(6.dp)
         // Optionally you can set a shape if you want
         // shape = RoundedCornerShape(12.dp),
+        ,colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceVariant)
     ) {
         Column(
             modifier = Modifier
@@ -241,7 +250,9 @@ fun MotorcycleDetailCard(
             // Detail
             Text(
                 text = motorcycle.detail,
-                fontSize = 14.sp
+                fontSize = 14.sp,
+                maxLines = 3,
+                overflow = TextOverflow.Ellipsis
             )
 
             Spacer(modifier = Modifier.height(6.dp))
