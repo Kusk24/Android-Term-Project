@@ -6,6 +6,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,7 +14,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.HelpOutline
 import androidx.compose.material.icons.filled.Language
@@ -62,184 +65,197 @@ fun SettingScreen(
         "my" to "Myanmar"
     )
 
+    val scrollState = rememberScrollState()
+
     // State to control showing the language dialog
     var showLanguageDialog by remember { mutableStateOf(false) }
     // Notification toggle
     val notificationChecked by userViewModel.notiPermission.observeAsState(initial = true)
 
-    ConstraintLayout(
+    Box(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(scrollState)
             .padding(16.dp)
     ) {
-        val (box1, box2, box3, box4, box5, box6) = createRefs()
-
-        // 1) Row for "Account Information"
-        Row(
+        ConstraintLayout(
             modifier = Modifier
-                .clickable {
-                    navController.navigate("accountInfo")
-                }
-                .constrainAs(box1) {
-                    top.linkTo(parent.top, margin = 20.dp)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }
-                .border(1.dp, Color.Gray, RoundedCornerShape(15.dp))
-                .height(50.dp)
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxSize()
+                .padding(16.dp)
         ) {
-            Icon(
-                imageVector = Icons.Filled.Person,
-                contentDescription = null)
-            Spacer(modifier = Modifier.width(12.dp))
-            Text(text = stringResource(id = R.string.account_info))
-        }
+            val (box1, box2, box3, box4, box5, box6) = createRefs()
 
-        // 2) Row for "Language"
-        Row(
-            modifier = Modifier
-                .clickable {
-                    showLanguageDialog = true
-                }
-                .constrainAs(box2) {
-                    top.linkTo(box1.bottom, margin = 50.dp)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }
-                .border(1.dp, Color.Gray, RoundedCornerShape(15.dp))
-                .height(50.dp)
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Language,
-                contentDescription = null)
-            Spacer(modifier = Modifier.width(12.dp))
-            // Display the full language name from our map
-            Text(text = stringResource(R.string.language) + ": ${languageMap[languageCode] ?: languageCode}")
-        }
-
-        // Show the language dialog if needed
-        if (showLanguageDialog) {
-            LanguageSelectionDialog(
-                // Pass the actual language code
-                currentLanguage = languageCode,
-                onDismiss = { showLanguageDialog = false },
-                onLanguageSelected = { chosenLang ->
-                    // This updates preferences via ViewModel
-                    userViewModel.setLanguage(chosenLang)
-                    showLanguageDialog = false
-
-                    (context as? Activity)?.recreate()
-                },
-                userViewModel = userViewModel
-            )
-        }
-
-        Row(
-            modifier = Modifier
-                .constrainAs(box3) {
-                    top.linkTo(box2.bottom, margin = 50.dp)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }
-                .border(1.dp, Color.Gray, RoundedCornerShape(15.dp))
-                .height(50.dp)
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Notifications,
-                contentDescription = null
-            )
-            Spacer(modifier = Modifier.width(12.dp))
-            Text(text = stringResource(id = R.string.notification))
-            Spacer(modifier = Modifier.weight(1f))
-            Switch(
-                checked = notificationChecked,
-                onCheckedChange = { newValue ->
-                    userViewModel.setNotiPermission(newValue)
-                    if (newValue) {
-                        notificationViewModel.subscribeToTopic()
-                    } else {
-                        notificationViewModel.unsubscribeFromTopic()
+            // 1) Row for "Account Information"
+            Row(
+                modifier = Modifier
+                    .clickable {
+                        navController.navigate("accountInfo")
                     }
-                }
-            )
-        }
-
-        // 4) Row for "Help & Support"
-        Row(
-            modifier = Modifier
-                .clickable { /* ... */ }
-                .constrainAs(box4) {
-                    top.linkTo(box3.bottom, margin = 50.dp)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }
-                .border(1.dp, Color.Gray, RoundedCornerShape(15.dp))
-                .height(50.dp)
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = Icons.Filled.HelpOutline,
-                contentDescription = null)
-            Spacer(modifier = Modifier.width(12.dp))
-            Text(text = stringResource(id = R.string.help_and_support))
-        }
-
-        // 5) Row for "FAQs"
-        Row(
-            modifier = Modifier
-                .clickable { /* ... */ }
-                .constrainAs(box5) {
-                    top.linkTo(box4.bottom, margin = 50.dp)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }
-                .border(1.dp, Color.Gray, RoundedCornerShape(15.dp))
-                .height(50.dp)
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = Icons.Filled.QuestionAnswer,
-                contentDescription = null)
-            Spacer(modifier = Modifier.width(12.dp))
-            Text(text = stringResource(id = R.string.faqs))
-        }
-
-        // 6) Log out Button
-        Button(
-            onClick = {
-                userViewModel.logoutUser()
-            },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Red,
-                contentColor = Color.White
-            ),
-            border = BorderStroke(1.dp, Color.Red),
-            modifier = Modifier.constrainAs(box6) {
-                top.linkTo(box5.bottom, margin = 50.dp)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-                bottom.linkTo(parent.bottom)
+                    .constrainAs(box1) {
+                        top.linkTo(parent.top, margin = 20.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+                    .border(1.dp, Color.Gray, RoundedCornerShape(15.dp))
+                    .height(50.dp)
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Person,
+                    contentDescription = null
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Text(text = stringResource(id = R.string.account_info))
             }
-        ) {
-            Text(text = stringResource(R.string.sign_out))
+
+            // 2) Row for "Language"
+            Row(
+                modifier = Modifier
+                    .clickable {
+                        showLanguageDialog = true
+                    }
+                    .constrainAs(box2) {
+                        top.linkTo(box1.bottom, margin = 50.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+                    .border(1.dp, Color.Gray, RoundedCornerShape(15.dp))
+                    .height(50.dp)
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Language,
+                    contentDescription = null
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                // Display the full language name from our map
+                Text(text = stringResource(R.string.language) + ": ${languageMap[languageCode] ?: languageCode}")
+            }
+
+            // Show the language dialog if needed
+            if (showLanguageDialog) {
+                LanguageSelectionDialog(
+                    // Pass the actual language code
+                    currentLanguage = languageCode,
+                    onDismiss = { showLanguageDialog = false },
+                    onLanguageSelected = { chosenLang ->
+                        // This updates preferences via ViewModel
+                        userViewModel.setLanguage(chosenLang)
+                        showLanguageDialog = false
+
+                        (context as? Activity)?.recreate()
+                    },
+                    userViewModel = userViewModel
+                )
+            }
+
+            Row(
+                modifier = Modifier
+                    .constrainAs(box3) {
+                        top.linkTo(box2.bottom, margin = 50.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+                    .border(1.dp, Color.Gray, RoundedCornerShape(15.dp))
+                    .height(50.dp)
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Notifications,
+                    contentDescription = null
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Text(text = stringResource(id = R.string.notification))
+                Spacer(modifier = Modifier.weight(1f))
+                Switch(
+                    checked = notificationChecked,
+                    onCheckedChange = { newValue ->
+                        userViewModel.setNotiPermission(newValue)
+                        if (newValue) {
+                            notificationViewModel.subscribeToTopic()
+                        } else {
+                            notificationViewModel.unsubscribeFromTopic()
+                        }
+                    }
+                )
+            }
+
+            // 4) Row for "Help & Support"
+            Row(
+                modifier = Modifier
+                    .clickable { /* ... */ }
+                    .constrainAs(box4) {
+                        top.linkTo(box3.bottom, margin = 50.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+                    .border(1.dp, Color.Gray, RoundedCornerShape(15.dp))
+                    .height(50.dp)
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.HelpOutline,
+                    contentDescription = null
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Text(text = stringResource(id = R.string.help_and_support))
+            }
+
+            // 5) Row for "FAQs"
+            Row(
+                modifier = Modifier
+                    .clickable { /* ... */ }
+                    .constrainAs(box5) {
+                        top.linkTo(box4.bottom, margin = 50.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+                    .border(1.dp, Color.Gray, RoundedCornerShape(15.dp))
+                    .height(50.dp)
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.QuestionAnswer,
+                    contentDescription = null
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Text(text = stringResource(id = R.string.faqs))
+            }
+
+            // 6) Log out Button
+            Button(
+                onClick = {
+                    userViewModel.logoutUser()
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Red,
+                    contentColor = Color.White
+                ),
+                border = BorderStroke(1.dp, Color.Red),
+                modifier = Modifier.constrainAs(box6) {
+                    top.linkTo(box5.bottom, margin = 50.dp)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    bottom.linkTo(parent.bottom)
+                }
+            ) {
+                Text(text = stringResource(R.string.sign_out))
+            }
         }
     }
 }
