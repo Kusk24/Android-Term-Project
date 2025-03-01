@@ -2,6 +2,7 @@
 adaptive = "1.0.0"
 agp = "8.7.2"
 coilCompose = "3.0.4"
+coilComposeVersion = "3.0.3"
 constraintlayoutComposeVersion = "1.1.0"
 datastorePreferences = "1.1.2"
 exoplayer = "2.18.1"
@@ -45,7 +46,9 @@ androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref =
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
+coil-compose-v303 = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilComposeVersion" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilCompose" }
+coil-video = { module = "io.coil-kt.coil3:coil-video", version.ref = "coilComposeVersion" }
 constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutComposeVersion" }
 exoplayer = { module = "com.google.android.exoplayer:exoplayer", version.ref = "exoplayer" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }

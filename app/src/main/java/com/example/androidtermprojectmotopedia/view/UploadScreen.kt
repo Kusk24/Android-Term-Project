@@ -7,7 +7,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -43,19 +42,17 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
-import androidx.lifecycle.viewmodel.compose.viewModel
+import coil3.ImageLoader
 import coil3.compose.AsyncImage
-import com.example.androidtermprojectmotopedia.repository.UserPreferencesRepository
-import com.example.androidtermprojectmotopedia.repository.UserRepository
+import coil3.video.VideoFrameDecoder
 import com.example.androidtermprojectmotopedia.ui.backgrounds.UploadPageAnimatedBackground
 import com.example.androidtermprojectmotopedia.viewModel.MotorcycleViewModel
 import com.example.androidtermprojectmotopedia.viewModel.UserViewModel
-import com.example.androidtermprojectmotopedia.viewModel.UserViewModelFactory
 import kotlinx.coroutines.launch
 import java.util.Date
 import java.util.Locale
@@ -99,6 +96,12 @@ fun UploadScreen(modifier: Modifier = Modifier, motorcycleViewModel: MotorcycleV
     var errorMessage by remember { mutableStateOf("") }
 
     val coroutineScope = rememberCoroutineScope()
+
+    val imageLoader = ImageLoader.Builder(LocalContext.current)
+        .components{
+            add(VideoFrameDecoder.Factory())
+        }
+        .build()
 
     // Setup pickMedia launcher
     val pickMedia = rememberLauncherForActivityResult(
@@ -159,6 +162,7 @@ fun UploadScreen(modifier: Modifier = Modifier, motorcycleViewModel: MotorcycleV
                         AsyncImage(
                             model = selectedImage,
                             contentDescription = "Selected Image",
+                            contentScale = ContentScale.Crop,
                             modifier = Modifier.fillMaxSize()
                         )
                     }
@@ -176,6 +180,8 @@ fun UploadScreen(modifier: Modifier = Modifier, motorcycleViewModel: MotorcycleV
                         AsyncImage(
                             model = selectedVideo,
                             contentDescription = "Selected Video",
+                            imageLoader = imageLoader,
+                            contentScale = ContentScale.Crop,
                             modifier = Modifier.fillMaxSize()
                         )
                     }
@@ -339,5 +345,5 @@ fun DatePickerModalInput(
  */
 fun convertMillisToDate(millis: Long): String {
     val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
-    return if (millis == 0L) "01/01/1970" else formatter.format(Date(millis))
+    return if (millis == 0L) "01/01/2000" else formatter.format(Date(millis))
 }

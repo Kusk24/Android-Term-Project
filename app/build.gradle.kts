@@ -138,4 +138,7 @@ dependencies {
     implementation("com.google.android.exoplayer:exoplayer:2.19.1")
     implementation("androidx.media3:media3-exoplayer:1.5.1")
     implementation("androidx.media3:media3-ui:1.5.1")
+
+    implementation(libs.coil.compose.v303)
+    implementation(libs.coil.video)
 }
