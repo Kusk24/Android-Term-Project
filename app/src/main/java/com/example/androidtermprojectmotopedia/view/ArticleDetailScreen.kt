@@ -56,6 +56,7 @@ fun ArticleDetailScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(bottom = 40.dp)
         ) {
             item {
                 // A single card to contain all detail content
