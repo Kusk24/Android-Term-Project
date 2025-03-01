@@ -36,7 +36,7 @@ class UserRepository {
      */
     suspend fun loginUser(email: String, password: String): UserWithId? {
         val querySnapshot = userCollection()
-            .whereEqualTo("email", email)
+            .whereEqualTo("email", email.lowercase())
             .whereEqualTo("password", password)
             .get()
             .await()
