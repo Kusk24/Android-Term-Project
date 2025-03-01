@@ -771,36 +771,55 @@ fun ProfilePageAnimatedBackground(
 
 @Composable
 fun UploadPageAnimatedBackground(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    primaryColor: Color = MaterialTheme.colorScheme.primary,
+    backgroundColor: Color = MaterialTheme.colorScheme.background
 ) {
-    // Custom color scheme optimized for upload page
-    val goldColor = MaterialTheme.colorScheme.primary
-    val creamColor = MaterialTheme.colorScheme.background
-    val accentBlue = Color(0xFF1E3F66) // Deep blue accent for upload theme
+    // Multiple animation parameters with different durations for more organic motion
+    val infiniteTransition = rememberInfiniteTransition(label = "upload_background_animation")
 
-    // Create animation controllers
-    val infiniteTransition = rememberInfiniteTransition(label = "upload_bg")
-
-    // Slow gradient shift animation
-    val gradientShift = infiniteTransition.animateFloat(
+    // Primary wave animation
+    val primaryWave = infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = 1f,
         animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 20000, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
+            animation = tween(durationMillis = 12000, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
         ),
-        label = "gradient_shift"
+        label = "primary_wave"
     )
 
-    // Upload progress animation effect
-    val uploadEffect = infiniteTransition.animateFloat(
+    // Secondary wave animation with different timing
+    val secondaryWave = infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = 1f,
         animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 5000, easing = FastOutSlowInEasing),
+            animation = tween(durationMillis = 15000, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "secondary_wave"
+    )
+
+    // Particle animation
+    val particleAnimation = infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 8000, easing = LinearEasing),
             repeatMode = RepeatMode.Restart
         ),
-        label = "upload_effect"
+        label = "particle_animation"
+    )
+
+    // Pulsing animation for highlights
+    val pulseAnimation = infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 4000, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "pulse_animation"
     )
 
     Box(modifier = modifier.fillMaxSize()) {
@@ -808,99 +827,114 @@ fun UploadPageAnimatedBackground(
             val w = size.width
             val h = size.height
 
-            // Calculate animated values
-            val waveOffset = 0.03f * sin(gradientShift.value * 2 * PI.toFloat())
-            val progressY = h * uploadEffect.value
+            // Calculate dynamic offsets for smooth, organic wave motion
+            val xOffset1 = 0.07f * sin(primaryWave.value * 2 * PI.toFloat())
+            val yOffset1 = 0.06f * cos(secondaryWave.value * 2 * PI.toFloat())
+            val xOffset2 = 0.05f * sin((secondaryWave.value + 0.25f) * 2 * PI.toFloat())
+            val yOffset2 = 0.08f * cos((primaryWave.value + 0.33f) * 2 * PI.toFloat())
 
-            // Create header area
-            val headerPath = Path().apply {
-                moveTo(0f, 0f)
-                lineTo(w, 0f)
-                lineTo(w, h * 0.2f)
-                cubicTo(
-                    w * (0.7f - waveOffset), h * (0.19f + waveOffset),
-                    w * (0.3f + waveOffset), h * (0.21f - waveOffset),
-                    0f, h * 0.2f
+            // Background gradient
+            drawRect(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        backgroundColor,
+                        backgroundColor.copy(alpha = 0.95f)
+                    )
                 )
-                close()
-            }
+            )
 
-            // Create content area with subtle curve
-            val contentPath = Path().apply {
-                moveTo(0f, h * 0.2f)
+            // Create main flowing wave path
+            val mainWavePath = Path().apply {
+                moveTo(0f, h * (0.4f + yOffset1))
                 cubicTo(
-                    w * (0.3f + waveOffset), h * (0.21f - waveOffset),
-                    w * (0.7f - waveOffset), h * (0.19f + waveOffset),
-                    w, h * 0.2f
+                    w * (0.25f + xOffset1), h * (0.3f - yOffset1 * 0.7f),
+                    w * (0.65f - xOffset2), h * (0.5f + yOffset2 * 0.5f),
+                    w, h * (0.35f - yOffset2 * 0.8f)
                 )
                 lineTo(w, h)
                 lineTo(0f, h)
                 close()
             }
 
-            // Create vertical "upload progress" indicator paths
-            val uploadLine1 = Path().apply {
-                moveTo(w * 0.2f, h * 0.25f)
-                lineTo(w * 0.2f, h * 0.25f + progressY * 0.7f)
+            // Create secondary flowing wave path
+            val secondaryWavePath = Path().apply {
+                moveTo(0f, h * (0.5f - yOffset2))
+                cubicTo(
+                    w * (0.3f - xOffset2), h * (0.4f + yOffset1 * 0.6f),
+                    w * (0.7f + xOffset1 * 0.8f), h * (0.6f - yOffset1 * 0.4f),
+                    w, h * (0.55f + yOffset2 * 0.6f)
+                )
+                lineTo(w, h)
+                lineTo(0f, h)
+                close()
             }
 
-            val uploadLine2 = Path().apply {
-                moveTo(w * 0.8f, h * 0.25f)
-                lineTo(w * 0.8f, h * 0.25f + progressY * 0.7f)
-            }
-
-            // Draw header background with gold gradient
+            // Draw secondary wave with translucent color
             drawPath(
-                path = headerPath,
-                brush = Brush.linearGradient(
-                    colors = listOf(goldColor, goldColor.copy(alpha = 0.9f)),
-                    start = Offset(w * gradientShift.value, 0f),
-                    end = Offset(w * (1f - gradientShift.value), h * 0.2f)
+                path = secondaryWavePath,
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        primaryColor.copy(alpha = 0.2f),
+                        primaryColor.copy(alpha = 0.5f)
+                    ),
+                    startY = 0f,
+                    endY = h * 0.9f
                 )
             )
 
-            // Draw content area with cream color
+            // Draw main wave with gradient
             drawPath(
-                path = contentPath,
-                color = creamColor
+                path = mainWavePath,
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        primaryColor.copy(alpha = 0.7f),
+                        primaryColor.copy(alpha = 0.9f)
+                    ),
+                    startY = 0f,
+                    endY = h * 0.8f
+                )
             )
 
-            // Draw vertical upload indicator lines with animated progress
-            drawPath(
-                path = uploadLine1,
-                color = accentBlue.copy(alpha = 0.1f),
-                style = Stroke(width = 8f)
-            )
+            // Add subtle floating particles to suggest upload activity
+            val particleCount = 15
+            val pulseAlpha = 0.3f + 0.2f * sin(pulseAnimation.value * PI.toFloat() * 2)
 
-            drawPath(
-                path = uploadLine2,
-                color = accentBlue.copy(alpha = 0.1f),
-                style = Stroke(width = 8f)
-            )
+            for (i in 0 until particleCount) {
+                // Create random but stable positions for particles
+                val seed = i * 1000
+                val randomX = Random(seed).nextFloat()
+                val randomY = Random(seed + 1).nextFloat()
+                val randomSize = Random(seed + 2).nextFloat() * 0.6f + 0.4f
+                val randomPhase = Random(seed + 3).nextFloat() * 2 * PI.toFloat()
 
-            // Draw connecting diagonal lines - motorcycle inspired elements
-            for (i in 0 until 5) {
-                val progress = (uploadEffect.value + i * 0.2f) % 1f
-                val startY = h * 0.3f + progress * h * 0.6f
+                // Calculate animated positions
+                val particleX = w * (0.2f + 0.6f * randomX + 0.05f * sin((particleAnimation.value * 2 * PI.toFloat() + randomPhase)))
+                val particleY = h * (0.3f + 0.4f * randomY - 0.1f * particleAnimation.value * sin(randomPhase * 0.5f))
+                val particleSize = 8f * randomSize * (0.8f + 0.2f * sin(pulseAnimation.value * PI.toFloat() * 2 + randomPhase))
 
-                if (startY < h * 0.9f) {
-                    drawLine(
-                        color = accentBlue.copy(alpha = 0.05f * (1f - progress)),
-                        start = Offset(w * 0.2f, startY),
-                        end = Offset(w * 0.8f, startY - h * 0.05f),
-                        strokeWidth = 3f
+                // Draw moving particles that suggest upward motion
+                if (particleY < h * 0.75f) {  // Only show particles above the bottom wave
+                    drawCircle(
+                        color = primaryColor.copy(alpha = pulseAlpha * (0.7f - 0.5f * (particleY / h))),
+                        radius = particleSize,
+                        center = Offset(particleX, particleY),
+                        style = Fill
                     )
                 }
             }
 
-            // Draw subtle grid pattern for form fields
-            val formFieldY = listOf(0.35f, 0.45f, 0.65f, 0.8f)
-            formFieldY.forEach { y ->
-                drawLine(
-                    color = accentBlue.copy(alpha = 0.03f),
-                    start = Offset(w * 0.15f, h * y),
-                    end = Offset(w * 0.85f, h * y),
-                    strokeWidth = 2f
+            // Add highlight accents
+            val accentCount = 3
+            for (i in 0 until accentCount) {
+                val accentX = w * (0.3f + 0.4f * i / accentCount)
+                val accentY = h * (0.4f + 0.05f * sin((primaryWave.value + i * 0.3f) * 2 * PI.toFloat()))
+                val accentSize = 40f + 15f * sin(pulseAnimation.value * PI.toFloat() * 2)
+
+                drawCircle(
+                    color = primaryColor.copy(alpha = 0.05f + 0.05f * sin(pulseAnimation.value * PI.toFloat() * 2)),
+                    radius = accentSize,
+                    center = Offset(accentX, accentY),
+                    style = Fill
                 )
             }
         }
