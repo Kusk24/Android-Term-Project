@@ -27,14 +27,13 @@ import com.example.androidtermprojectmotopedia.viewModel.MotorcycleViewModel
 import com.example.androidtermprojectmotopedia.viewModel.UserViewModel
 import kotlinx.coroutines.launch
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.unit.LayoutDirection
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainAppScreen(
     userViewModel: UserViewModel,
     motorcycleViewModel: MotorcycleViewModel,
-    windowSizeClass: WindowWidthSizeClass, // Add this
+    windowSizeClass: WindowWidthSizeClass,
     modifier: Modifier = Modifier
 ) {
     val navController = rememberNavController()
@@ -77,7 +76,7 @@ fun MainAppScreen(
             NavHost(
                 navController = navController,
                 startDestination = "Home",
-                // Override the bottom padding here
+                // Override the bottom padding
                 modifier = Modifier.padding(
                     top = innerPadding.calculateTopPadding(),
                     bottom = 0.dp, // remove or reduce bottom padding

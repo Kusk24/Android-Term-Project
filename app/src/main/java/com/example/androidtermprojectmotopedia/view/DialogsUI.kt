@@ -23,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.androidtermprojectmotopedia.model.Motorcycle
@@ -126,16 +127,16 @@ fun ConfirmDeleteDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { androidx.compose.material3.Text("Confirm Deletion") },
-        text = { androidx.compose.material3.Text(message) },
+        title = { Text("Confirm Deletion") },
+        text = { Text(message) },
         confirmButton = {
             TextButton(onClick = onConfirm) {
-                androidx.compose.material3.Text("Yes, Delete")
+                Text("Yes, Delete")
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                androidx.compose.material3.Text("Cancel")
+                Text("Cancel")
             }
         }
     )
@@ -170,6 +171,68 @@ fun LogoutWarningDialog(
         dismissButton = {
             TextButton(onClick = onDismiss) {
                 Text("Cancel")
+            }
+        }
+    )
+}
+
+
+
+@Composable
+fun HelpSupportDialog(
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(text = "Help & Support") },
+        text = {
+            Text(
+                text = "For assistance or inquiries, please contact our support:\n" +
+                        "Email: support@example.com\n" +
+                        "Phone: +1 234 567 890\n\n" +
+                        "Our team will be happy to help!"
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("OK")
+            }
+        }
+    )
+}
+
+/**
+ * Simple FAQ dialog that displays a list of Q&A items.
+ */
+@Composable
+fun FAQDialog(
+    onDismiss: () -> Unit
+) {
+    // Sample list of FAQs
+    val faqs = listOf(
+        "Q: How do I change my password?" to
+                "A: Go to Settings > Account Information > Change Password.",
+        "Q: Can I sync data across devices?" to
+                "A: Yes, simply sign in with the same account on each device.",
+        "Q: How do I report a bug?" to
+                "A: Please contact our support email with details and screenshots."
+    )
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(text = "FAQs") },
+        text = {
+            Column {
+                faqs.forEach { (question, answer) ->
+                    Text(text = question, fontWeight = FontWeight.Bold)
+                    Text(text = answer)
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Close")
             }
         }
     )

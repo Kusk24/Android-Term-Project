@@ -16,7 +16,6 @@
     import androidx.compose.foundation.lazy.items
     import androidx.compose.foundation.shape.RoundedCornerShape
     import androidx.compose.material.icons.Icons
-    import androidx.compose.material.icons.filled.Notifications
     import androidx.compose.material.icons.filled.Search
     import androidx.compose.material3.Button
     import androidx.compose.material3.ButtonDefaults
@@ -26,7 +25,6 @@
     import androidx.compose.material3.MaterialTheme
     import androidx.compose.material3.OutlinedTextField
     import androidx.compose.material3.Text
-    import androidx.compose.material3.TextField
     import androidx.compose.runtime.Composable
     import androidx.compose.runtime.collectAsState
     import androidx.compose.runtime.getValue
@@ -37,12 +35,9 @@
     import androidx.compose.ui.Modifier
     import androidx.compose.ui.text.font.FontWeight
     import androidx.compose.ui.unit.dp
-    import androidx.compose.ui.unit.sp
     import androidx.lifecycle.viewmodel.compose.viewModel
     import coil3.compose.AsyncImage
-    import com.example.androidtermprojectmotopedia.model.Motorcycle
     import com.example.androidtermprojectmotopedia.ui.backgrounds.CurlyLineBackgroundVariant1
-    import com.example.androidtermprojectmotopedia.ui.backgrounds.CurlyLineBackgroundVariant2
     import com.example.androidtermprojectmotopedia.viewModel.MotorcycleViewModel
 
     @Composable
@@ -69,7 +64,7 @@
             .take(pageSize)
 
         Box(modifier = Modifier.fillMaxSize()) {
-            // Use one of your background composables (for example, CurlyLineBackgroundVariant1)
+            // Use one of background composables
             CurlyLineBackgroundVariant1()
 
             Column(modifier = modifier.padding(16.dp)) {

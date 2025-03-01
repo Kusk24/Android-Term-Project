@@ -15,7 +15,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.consumePositionChange
 import androidx.compose.ui.input.pointer.pointerInput
@@ -27,12 +26,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.example.androidtermprojectmotopedia.model.Notification
-import com.example.androidtermprojectmotopedia.ui.backgrounds.CurlyLineBackground
-import com.example.androidtermprojectmotopedia.ui.backgrounds.CurlyLineBackgroundVariant1
-import com.example.androidtermprojectmotopedia.ui.backgrounds.CurlyLineBackgroundVariant2
-import com.example.androidtermprojectmotopedia.ui.backgrounds.CurlyLineBackgroundVariant3
 import com.example.androidtermprojectmotopedia.ui.backgrounds.DiagonalGradientBackground
-import com.example.androidtermprojectmotopedia.ui.backgrounds.LayeredWavesBackground
 import com.example.androidtermprojectmotopedia.viewModel.NotificationViewModel
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
@@ -56,7 +50,7 @@ fun NotificationScreen(
                 CustomSwipeToDismissNotificationItem(
                     notification = notification,
                     onDismissed = {
-                        // Remove the notification from your ViewModel/DB
+                        // Remove the notification from ViewModel/DB
                         viewModel.deleteMessages(notification)
                     }
                 )
@@ -68,7 +62,7 @@ fun NotificationScreen(
 
 /**
  * A custom swipe-to-dismiss implementation that uses pointerInput + offset
- * with detectDragGestures (the newer API), styled for a cleaner look.
+ * with detectDragGestures (the newer API).
  */
 @Composable
 fun CustomSwipeToDismissNotificationItem(
@@ -149,7 +143,7 @@ fun CustomSwipeToDismissNotificationItem(
 }
 
 /**
- * A Card + ConstraintLayout for the notification details, with some styling.
+ * A Card + ConstraintLayout for the notification details
  */
 @Composable
 fun NotificationItemUI(notification: Notification) {

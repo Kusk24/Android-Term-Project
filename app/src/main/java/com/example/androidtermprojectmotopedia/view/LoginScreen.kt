@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -163,7 +162,7 @@ fun LoginScreen(
     val currentUser by userViewModel.currentUser.collectAsState(initial = null)
     val errorMessage by userViewModel.errorMessage.collectAsState()
 
-    // Ensure we load the current user from DataStore/Firestore
+    // Load the current user from DataStore/Firestore
     LaunchedEffect(Unit) {
         userViewModel.loadCurrentUser()
     }
@@ -172,7 +171,7 @@ fun LoginScreen(
         // Show login UI
         Surface(
             modifier = Modifier.fillMaxSize(),
-            color = androidx.compose.material3.MaterialTheme.colorScheme.background
+            color = MaterialTheme.colorScheme.background
         ) {
             LoginPage(
                 loginButtonClicked = { email, password ->
