@@ -22,6 +22,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.androidtermprojectmotopedia.model.Motorcycle
@@ -148,6 +149,28 @@ fun ErrorDialog(title: String, text: String, onDismiss: () -> Unit) {
         text = { Text(text) },
         confirmButton = {
             TextButton(onClick = onDismiss) { Text("OK") }
+        }
+    )
+}
+
+@Composable
+fun LogoutWarningDialog(
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    androidx.compose.material3.AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Log Out") },
+        text = { Text("Are you sure you want to log out?") },
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text("Yes", color = Color.Red)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel")
+            }
         }
     )
 }

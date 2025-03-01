@@ -2,8 +2,11 @@ package com.example.androidtermprojectmotopedia
 
 import android.Manifest
 import android.content.Context
+import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -15,13 +18,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
@@ -86,6 +92,8 @@ class MainActivity : AppCompatActivity() {
 
         // Request the notification permission and initialize Firebase Messaging
         askNotificationPermission()
+
+        checkInternetConnection()
     }
 
     private fun askNotificationPermission() {
@@ -159,6 +167,43 @@ class MainActivity : AppCompatActivity() {
 
         // 4) Pass it up the chain
         super.attachBaseContext(localizedContext)
+    }
+
+    private fun checkInternetConnection() {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val network = connectivityManager.activeNetwork
+            val capabilities = connectivityManager.getNetworkCapabilities(network)
+
+            if (capabilities == null || !capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)) {
+                showNoInternetDialog()
+            }
+        } else {
+            val activeNetworkInfo = connectivityManager.activeNetworkInfo
+            if (activeNetworkInfo == null || !activeNetworkInfo.isConnected) {
+                showNoInternetDialog()
+            }
+        }
+    }
+
+    private fun showNoInternetDialog() {
+        // Use the traditional AlertDialog from AppCompat
+        val builder = androidx.appcompat.app.AlertDialog.Builder(this)
+        builder.setTitle("No Internet Connection")
+            .setMessage("Internet connection is required to use this app. Please connect to the internet and try again.")
+            .setCancelable(false)
+            .setPositiveButton("Quit") { _, _ ->
+                finish() // Close the app
+            }
+
+        val alert = builder.create()
+
+        // Show the dialog first
+        alert.show()
+
+        val positiveButton = alert.getButton(DialogInterface.BUTTON_POSITIVE)
+        positiveButton.setTextColor(ContextCompat.getColor(this, R.color.black))
     }
 }
 

@@ -65,6 +65,8 @@ fun SettingScreen(
         "my" to "Myanmar"
     )
 
+    var showLogoutDialog by remember { mutableStateOf(false) }
+
     val scrollState = rememberScrollState()
 
     // State to control showing the language dialog
@@ -240,7 +242,7 @@ fun SettingScreen(
             // 6) Log out Button
             Button(
                 onClick = {
-                    userViewModel.logoutUser()
+                    showLogoutDialog = true
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Red,
@@ -257,5 +259,18 @@ fun SettingScreen(
                 Text(text = stringResource(R.string.sign_out))
             }
         }
+    }
+
+    if (showLogoutDialog) {
+        LogoutWarningDialog(
+            onConfirm = {
+                showLogoutDialog = false
+                // Call your logout logic, e.g., clear user session
+                userViewModel.logoutUser() // Implement this function in your ViewModel as needed
+            },
+            onDismiss = {
+                showLogoutDialog = false
+            }
+        )
     }
 }
