@@ -56,7 +56,6 @@ fun ArticleDetailScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = 40.dp)
         ) {
             item {
                 // A single card to contain all detail content
@@ -131,7 +130,9 @@ fun ArticleDetailScreen(
                         Text(
                             text = "Uploaded Date: ${motorcycle!!.uploaded_date}",
                             fontStyle = Italic,
-                            style = MaterialTheme.typography.bodyMedium
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier
+                                .padding(bottom = 40.dp)
                         )
                     }
             }
