@@ -9,6 +9,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.androidtermprojectmotopedia.model.Brand
 import com.example.androidtermprojectmotopedia.viewModel.BrandViewModel
 import androidx.compose.ui.unit.dp
+import com.example.androidtermprojectmotopedia.ui.backgrounds.CurlyLineBackground
+import com.example.androidtermprojectmotopedia.ui.backgrounds.CurlyLineBackgroundVariant1
+import com.example.androidtermprojectmotopedia.ui.backgrounds.CurlyLineBackgroundVariant2
+import com.example.androidtermprojectmotopedia.ui.backgrounds.CurlyLineBackgroundVariant3
+import com.example.androidtermprojectmotopedia.ui.backgrounds.DiagonalGradientBackground
+import com.example.androidtermprojectmotopedia.ui.backgrounds.LayeredWavesBackground
+import com.example.androidtermprojectmotopedia.ui.backgrounds.WaveBackground
 import com.example.androidtermprojectmotopedia.view.BrandDetailScreen
 import com.example.androidtermprojectmotopedia.view.BrandListScreen
 
@@ -28,47 +35,52 @@ fun BrandScreen(
         }
     }
 
-    // Decide layout based on window size
-    when (windowSizeClass) {
-        WindowWidthSizeClass.Compact -> {
-            if (selectedBrand == null) {
-                BrandListScreen(
-                    brandList = brandList,
-                    onBrandClicked = { brand ->
-                        selectedBrand = brand
-                    }
-                )
-            } else {
-                BrandDetailScreen(brand = selectedBrand!!)
-            }
-        }
-        else -> {
-            Row(Modifier.fillMaxSize()) {
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
-                ) {
+    Box(modifier = Modifier.fillMaxSize() ) {
+        CurlyLineBackgroundVariant2()
+        // Decide layout based on window size
+
+        when (windowSizeClass) {
+            WindowWidthSizeClass.Compact -> {
+                if (selectedBrand == null) {
                     BrandListScreen(
                         brandList = brandList,
                         onBrandClicked = { brand ->
                             selectedBrand = brand
                         }
                     )
+                } else {
+                    BrandDetailScreen(brand = selectedBrand!!)
                 }
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
-                ) {
-                    selectedBrand?.let {
-                        BrandDetailScreen(brand = it)
-                    } ?: run {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text("Select a brand to see details.")
+            }
+
+            else -> {
+                Row(Modifier.fillMaxSize()) {
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                    ) {
+                        BrandListScreen(
+                            brandList = brandList,
+                            onBrandClicked = { brand ->
+                                selectedBrand = brand
+                            }
+                        )
+                    }
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                    ) {
+                        selectedBrand?.let {
+                            BrandDetailScreen(brand = it)
+                        } ?: run {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text("Select a brand to see details.")
+                            }
                         }
                     }
                 }

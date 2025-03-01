@@ -2,6 +2,7 @@ package com.example.androidtermprojectmotopedia.view
 
 import android.util.Log
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -18,6 +19,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,17 +33,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
+import com.example.androidtermprojectmotopedia.ui.backgrounds.WaveBackground
 import com.example.androidtermprojectmotopedia.viewModel.MotorcycleViewModel
 
 @Composable
 fun ArticleListScreen(
     modifier: Modifier,
-    onArticleClick: (String) -> Unit
+    onArticleClick: (String) -> Unit,
+    motorcycleViewModel: MotorcycleViewModel
 ) {
 
-    val viewModel: MotorcycleViewModel = viewModel()
-    val motorcycles by viewModel.motorcycles.collectAsState()
-    val errorMessage by viewModel.errorMessage.collectAsState()
+    val motorcycles by motorcycleViewModel.motorcycles.collectAsState()
+    val errorMessage by motorcycleViewModel.errorMessage.collectAsState()
     val groupedByBrand = remember(motorcycles) {
         motorcycles.groupBy { it.brand }
     }
@@ -49,9 +52,12 @@ fun ArticleListScreen(
     if (errorMessage != null) {
         Text(text = "Error: $errorMessage", color = MaterialTheme.colorScheme.error)
     }
-    LazyColumn(
+    Box(modifier = Modifier.fillMaxSize()){
+        WaveBackground()
+
+        LazyColumn(
         modifier = modifier
-            .padding(16.dp)
+            .padding(start = 16.dp)
             .fillMaxSize()
     )
     {
@@ -68,10 +74,10 @@ fun ArticleListScreen(
 
             item {
                 LazyHorizontalGrid(
-                    rows = GridCells.Fixed(2),
+                    rows = GridCells.Fixed(1),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .size(width = 400.dp, height = 450.dp)
+                        .size(width = 400.dp, height = 200.dp)
                 ) {
                     items(brandMotorcycles) { motorcycle ->
                         Card(
@@ -81,7 +87,9 @@ fun ArticleListScreen(
                                 .clickable {
                                     onArticleClick(motorcycle.docId)
                                 },
-                            colors = CardDefaults.cardColors(Color.White)
+                            elevation = CardDefaults.cardElevation(6.dp),
+                            colors = CardDefaults.cardColors(
+                                MaterialTheme.colorScheme.surfaceVariant)
                         ) {
                             Column(modifier = Modifier.padding(8.dp)) {
                                 AsyncImage(
@@ -110,13 +118,11 @@ fun ArticleListScreen(
                         }
                     }
                 }
+                HorizontalDivider(thickness = 2.dp,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
+                    modifier = modifier.padding(vertical = 10.dp))
+
             }
-
-
         }
-
-
-    }
-
-
+    }}
 }

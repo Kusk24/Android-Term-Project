@@ -96,6 +96,16 @@ fun AccountInformationScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 OutlinedButton(
+                    onClick = onBackClick,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Red,
+                        contentColor = Color.Black
+                    )
+                ) {
+                    Text("Cancel")
+                }
+
+                OutlinedButton(
                     onClick = {
                         viewModel.updateUser(name, email, password)
                         showSuccessDialog = true
@@ -106,16 +116,6 @@ fun AccountInformationScreen(
                     )
                 ) {
                     Text("Save")
-                }
-
-                OutlinedButton(
-                    onClick = onBackClick,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Red,
-                        contentColor = Color.Black
-                    )
-                ) {
-                    Text("Cancel")
                 }
             }
 

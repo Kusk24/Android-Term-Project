@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -22,9 +23,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.androidtermprojectmotopedia.ui.backgrounds.AnimatedLayeredWavesBackground
+import com.example.androidtermprojectmotopedia.ui.backgrounds.CurlyLineBackground
+import com.example.androidtermprojectmotopedia.ui.backgrounds.CurlyLineBackgroundVariant1
+import com.example.androidtermprojectmotopedia.ui.backgrounds.CurlyLineBackgroundVariant2
+import com.example.androidtermprojectmotopedia.ui.backgrounds.CurlyLineBackgroundVariant3
+import com.example.androidtermprojectmotopedia.ui.backgrounds.DiagonalGradientBackground
+import com.example.androidtermprojectmotopedia.ui.backgrounds.LayeredWavesBackground
+import com.example.androidtermprojectmotopedia.ui.backgrounds.WaveBackground
 import com.example.androidtermprojectmotopedia.viewModel.MotorcycleViewModel
+import com.example.androidtermprojectmotopedia.viewModel.NotificationViewModel
 import com.example.androidtermprojectmotopedia.viewModel.UserViewModel
 
 @Composable
@@ -41,8 +52,10 @@ fun LoginPage(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp)
     ) {
+
+        AnimatedLayeredWavesBackground()
+
         // Main column in the center
         Column(
             modifier = Modifier.align(Alignment.Center),
@@ -100,7 +113,8 @@ fun LoginPage(
                 onClick = { loginButtonClicked(email, password) },
                 modifier = Modifier
                     .fillMaxWidth(0.5f)
-                    .height(48.dp)
+                    .height(48.dp),
+                colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onBackground)
             ) {
                 Text("Log In")
             }
@@ -140,8 +154,9 @@ fun LoginScreen(
         }
     } else {
         // Already logged in
-        MainAppScreen(userViewModel = userViewModel, motorcycleViewModel = motorcycleViewModel,
-            windowSizeClass = windowSizeClass,
+        MainAppScreen(userViewModel = userViewModel,
+            motorcycleViewModel = motorcycleViewModel,
+            windowSizeClass = windowSizeClass
         )
     }
 }

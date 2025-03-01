@@ -1,5 +1,6 @@
 package com.example.androidtermprojectmotopedia.view
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -44,7 +45,8 @@ fun BrandDetailScreen(brand: Brand) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(250.dp)
-                    .padding(bottom = 16.dp)
+                    .padding(bottom = 16.dp),
+                colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceVariant)
             ) {
                 Box {
                     AsyncImage(
@@ -103,7 +105,7 @@ fun BrandListScreen(
 ) {
     Column(
         modifier = Modifier
-            .padding(16.dp)
+            .padding(horizontal = 16.dp)
             .fillMaxSize()
     ) {
         Text(
@@ -127,7 +129,9 @@ fun BrandListScreen(
                         .aspectRatio(1f)
                         .clickable { onBrandClicked(brand) },
                     shape = RoundedCornerShape(12.dp),
-                    elevation = CardDefaults.cardElevation(6.dp)
+                    elevation = CardDefaults.cardElevation(6.dp),
+                    colors = CardDefaults.cardColors(
+                        MaterialTheme.colorScheme.surfaceVariant)
                 ) {
                     Column(
                         modifier = Modifier.fillMaxSize(),
@@ -171,7 +175,9 @@ fun InfoCard(
     Card(
         shape = MaterialTheme.shapes.medium,
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        modifier = Modifier.padding(vertical = 8.dp)
+        modifier = Modifier.padding(vertical = 8.dp),
+        colors = CardDefaults.cardColors(
+            MaterialTheme.colorScheme.surfaceVariant)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(

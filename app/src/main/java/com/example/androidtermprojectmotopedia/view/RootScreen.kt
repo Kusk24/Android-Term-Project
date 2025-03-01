@@ -1,12 +1,18 @@
 package com.example.androidtermprojectmotopedia.view
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -20,11 +26,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.androidtermprojectmotopedia.viewModel.MotorcycleViewModel
+import com.example.androidtermprojectmotopedia.viewModel.NotificationViewModel
 import com.example.androidtermprojectmotopedia.viewModel.UserViewModel
 import kotlinx.coroutines.delay
 
@@ -49,7 +59,7 @@ fun RootScreen(
     // 4) Once isLoggedIn is known (not null), wait 2 seconds, then hide splash
     LaunchedEffect(isLoggedIn) {
         if (isLoggedIn != null) {
-            delay(1000) // 2-second delay
+            delay(1200) // 2-second delay
             showSplash = false
         }
     }
@@ -65,12 +75,12 @@ fun RootScreen(
                 userViewModel = userViewModel,
                 motorcycleViewModel = motorcycleViewModel,
                 windowSizeClass = widthSizeClass,
-                modifier = modifier,
+                modifier = modifier
             )
             false -> LoginScreen(
                 userViewModel = userViewModel,
                 motorcycleViewModel = motorcycleViewModel,
-                windowSizeClass = widthSizeClass,
+                windowSizeClass = widthSizeClass
                 )
             // null shouldn't happen here, but if it does, you could fallback to SplashScreen or a default.
             null -> SplashScreen()
@@ -81,15 +91,59 @@ fun RootScreen(
 
 @Composable
 fun SplashScreen() {
+    // Animation states
+    var startAnimation by remember { mutableStateOf(false) }
+    var showContent by remember { mutableStateOf(false) }
+
+    // Animation specs
+    val circleScale = animateFloatAsState(
+        targetValue = if (startAnimation) 15f else 0f,
+        animationSpec = tween(
+            durationMillis = 800,
+            easing = FastOutSlowInEasing
+        ),
+        label = "circleScale"
+    )
+
+    val contentAlpha = animateFloatAsState(
+        targetValue = if (showContent) 1f else 0f,
+        animationSpec = tween(
+            durationMillis = 600,
+            easing = LinearOutSlowInEasing
+        ),
+        label = "contentAlpha"
+    )
+
+    // Trigger animations
+    LaunchedEffect(key1 = true) {
+        startAnimation = true
+        delay(400)
+        showContent = true
+    }
+
+    // Background container
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background) // Using the beige background instead of onBackground
+            .background(MaterialTheme.colorScheme.background)
     ) {
-        // Content in the center
+        // Expanding circle animation - starts small and grows outward
+        Box(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .size(40.dp)
+                .scale(circleScale.value)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.2f))
+        )
+
+        // Content that fades in after the circle expands
         Column(
-            modifier = Modifier.align(Alignment.Center),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier
+                .fillMaxSize()
+                .alpha(contentAlpha.value),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             // Large Title
             Text(
