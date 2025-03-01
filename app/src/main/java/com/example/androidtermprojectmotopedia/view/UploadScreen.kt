@@ -83,6 +83,7 @@ fun UploadScreen(modifier: Modifier = Modifier, motorcycleViewModel: MotorcycleV
     var brand by remember { mutableStateOf("") }
     var model by remember { mutableStateOf("") }
     var article by remember { mutableStateOf("") }
+    var releasedDateText by remember { mutableStateOf("") }
 
     // States for date picking
     var selectedDate by remember { mutableStateOf<Long>(0L) }
@@ -203,13 +204,20 @@ fun UploadScreen(modifier: Modifier = Modifier, motorcycleViewModel: MotorcycleV
                     modifier = Modifier.fillMaxWidth(0.8f)
                 )
 
+                TextField(
+                    value = releasedDateText,
+                    onValueChange = {releasedDateText=it},
+                    label={Text(text = "Release Date")},
+                    modifier = Modifier.fillMaxWidth(0.8f)
+                )
+
                 // Row for date selection
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     modifier = Modifier.fillMaxWidth(0.8f)
                 ) {
-                    Text(text = convertMillisToDate(selectedDate))
+//                    Text(text = convertMillisToDate(selectedDate))
                     Spacer(modifier = Modifier.weight(1f))
                     Button(onClick = { showModalInput = true },
                         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onBackground)
@@ -251,6 +259,10 @@ fun UploadScreen(modifier: Modifier = Modifier, motorcycleViewModel: MotorcycleV
                                 errorMessage = "Please enter article content"
                                 showErrorDialog = true
                             }
+                            releasedDateText.isBlank() -> {
+                                errorMessage = "Please enter a date"
+                                showErrorDialog = true
+                            }
                             else -> {
                                 // If all required fields are filled, proceed with upload
                                 coroutineScope.launch {
@@ -282,15 +294,17 @@ fun UploadScreen(modifier: Modifier = Modifier, motorcycleViewModel: MotorcycleV
             // Show date picker dialog if needed
             if (showModalInput) {
                 DatePickerModalInput(
-                    onDateSelected = {
-                        if (it != null) {
-                            selectedDate = it
+                    onDateSelected = { millis ->
+                        if (millis != null) {
+                            selectedDate = millis
+                            releasedDateText = convertMillisToDate(millis) // update the text field state
                         }
                         showModalInput = false
                     },
                     onDismiss = { showModalInput = false }
                 )
             }
+
 
             // Show success pop-up dialog when upload completes
             if (showSuccessDialog) {
@@ -345,5 +359,5 @@ fun DatePickerModalInput(
  */
 fun convertMillisToDate(millis: Long): String {
     val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
-    return if (millis == 0L) "01/01/2000" else formatter.format(Date(millis))
+    return formatter.format(Date(millis))
 }
