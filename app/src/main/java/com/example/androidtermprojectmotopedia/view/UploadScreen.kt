@@ -7,7 +7,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -43,19 +42,17 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
-import androidx.lifecycle.viewmodel.compose.viewModel
+import coil3.ImageLoader
 import coil3.compose.AsyncImage
-import com.example.androidtermprojectmotopedia.repository.UserPreferencesRepository
-import com.example.androidtermprojectmotopedia.repository.UserRepository
+import coil3.video.VideoFrameDecoder
 import com.example.androidtermprojectmotopedia.ui.backgrounds.UploadPageAnimatedBackground
 import com.example.androidtermprojectmotopedia.viewModel.MotorcycleViewModel
 import com.example.androidtermprojectmotopedia.viewModel.UserViewModel
-import com.example.androidtermprojectmotopedia.viewModel.UserViewModelFactory
 import kotlinx.coroutines.launch
 import java.util.Date
 import java.util.Locale
@@ -86,6 +83,7 @@ fun UploadScreen(modifier: Modifier = Modifier, motorcycleViewModel: MotorcycleV
     var brand by remember { mutableStateOf("") }
     var model by remember { mutableStateOf("") }
     var article by remember { mutableStateOf("") }
+    var releasedDateText by remember { mutableStateOf("") }
 
     // States for date picking
     var selectedDate by remember { mutableStateOf<Long>(0L) }
@@ -99,6 +97,12 @@ fun UploadScreen(modifier: Modifier = Modifier, motorcycleViewModel: MotorcycleV
     var errorMessage by remember { mutableStateOf("") }
 
     val coroutineScope = rememberCoroutineScope()
+
+    val imageLoader = ImageLoader.Builder(LocalContext.current)
+        .components{
+            add(VideoFrameDecoder.Factory())
+        }
+        .build()
 
     // Setup pickMedia launcher
     val pickMedia = rememberLauncherForActivityResult(
@@ -159,6 +163,7 @@ fun UploadScreen(modifier: Modifier = Modifier, motorcycleViewModel: MotorcycleV
                         AsyncImage(
                             model = selectedImage,
                             contentDescription = "Selected Image",
+                            contentScale = ContentScale.Crop,
                             modifier = Modifier.fillMaxSize()
                         )
                     }
@@ -176,6 +181,8 @@ fun UploadScreen(modifier: Modifier = Modifier, motorcycleViewModel: MotorcycleV
                         AsyncImage(
                             model = selectedVideo,
                             contentDescription = "Selected Video",
+                            imageLoader = imageLoader,
+                            contentScale = ContentScale.Crop,
                             modifier = Modifier.fillMaxSize()
                         )
                     }
@@ -197,13 +204,20 @@ fun UploadScreen(modifier: Modifier = Modifier, motorcycleViewModel: MotorcycleV
                     modifier = Modifier.fillMaxWidth(0.8f)
                 )
 
+                TextField(
+                    value = releasedDateText,
+                    onValueChange = {releasedDateText=it},
+                    label={Text(text = "Release Date")},
+                    modifier = Modifier.fillMaxWidth(0.8f)
+                )
+
                 // Row for date selection
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     modifier = Modifier.fillMaxWidth(0.8f)
                 ) {
-                    Text(text = convertMillisToDate(selectedDate))
+//                    Text(text = convertMillisToDate(selectedDate))
                     Spacer(modifier = Modifier.weight(1f))
                     Button(onClick = { showModalInput = true },
                         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onBackground)
@@ -245,6 +259,10 @@ fun UploadScreen(modifier: Modifier = Modifier, motorcycleViewModel: MotorcycleV
                                 errorMessage = "Please enter article content"
                                 showErrorDialog = true
                             }
+                            releasedDateText.isBlank() -> {
+                                errorMessage = "Please enter a date"
+                                showErrorDialog = true
+                            }
                             else -> {
                                 // If all required fields are filled, proceed with upload
                                 coroutineScope.launch {
@@ -276,15 +294,17 @@ fun UploadScreen(modifier: Modifier = Modifier, motorcycleViewModel: MotorcycleV
             // Show date picker dialog if needed
             if (showModalInput) {
                 DatePickerModalInput(
-                    onDateSelected = {
-                        if (it != null) {
-                            selectedDate = it
+                    onDateSelected = { millis ->
+                        if (millis != null) {
+                            selectedDate = millis
+                            releasedDateText = convertMillisToDate(millis) // update the text field state
                         }
                         showModalInput = false
                     },
                     onDismiss = { showModalInput = false }
                 )
             }
+
 
             // Show success pop-up dialog when upload completes
             if (showSuccessDialog) {
@@ -339,5 +359,5 @@ fun DatePickerModalInput(
  */
 fun convertMillisToDate(millis: Long): String {
     val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
-    return if (millis == 0L) "01/01/1970" else formatter.format(Date(millis))
+    return formatter.format(Date(millis))
 }

@@ -139,7 +139,9 @@ dependencies {
     implementation("androidx.media3:media3-exoplayer:1.5.1")
     implementation("androidx.media3:media3-ui:1.5.1")
 
+    implementation(libs.coil.compose.v303)
+    implementation(libs.coil.video)
+    
     implementation ("androidx.appcompat:appcompat:1.7.0")
-
     implementation ("androidx.security:security-crypto:1.1.0-alpha06")
 }
