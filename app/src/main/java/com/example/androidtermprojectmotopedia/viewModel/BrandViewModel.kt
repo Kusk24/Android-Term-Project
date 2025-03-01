@@ -23,7 +23,8 @@ class BrandViewModel : ViewModel() {
 
     private fun loadMotorcycles() {
 //        val url = "https://mocki.io/v1/a65ce55a-3cbd-4eea-a57d-8ce616331ad1"
-        val url = "https://mocki.io/v1/48cf18ec-c42b-4b8b-a685-863c9cce8b93"
+//        val url = "https://mocki.io/v1/48cf18ec-c42b-4b8b-a685-863c9cce8b93"
+        val url = "https://mocki.io/v1/4db89e54-71da-4652-8385-3dc3906b7ac0"
 
         viewModelScope.launch{
             val data = httpClient.get(url).body<BrandApiWrapper>()
