@@ -94,6 +94,10 @@ fun UploadScreen(modifier: Modifier = Modifier, motorcycleViewModel: MotorcycleV
     // State to show the success dialog
     var showSuccessDialog by remember { mutableStateOf(false) }
 
+    // State to show error dialog
+    var showErrorDialog by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf("") }
+
     val coroutineScope = rememberCoroutineScope()
 
     // Setup pickMedia launcher
@@ -112,13 +116,13 @@ fun UploadScreen(modifier: Modifier = Modifier, motorcycleViewModel: MotorcycleV
         }
     }
 
-        // Main Surface background
-        Surface(
-            modifier = modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            Box(modifier = Modifier.fillMaxSize()) {
-                UploadPageAnimatedBackground()
+    // Main Surface background
+    Surface(
+        modifier = modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            UploadPageAnimatedBackground()
 
             Column(
                 modifier = Modifier
@@ -227,19 +231,36 @@ fun UploadScreen(modifier: Modifier = Modifier, motorcycleViewModel: MotorcycleV
                 // Upload button
                 Button(
                     onClick = {
-                        // Launch a coroutine to upload the motorcycle article.
-                        coroutineScope.launch {
-                            motorcycleViewModel.uploadMotorcycle(
-                                brand = brand,
-                                model = model,
-                                detail = article,
-                                postedBy = postedByDocId,
-                                dateString = convertMillisToDate(selectedDate),
-                                imageUri = selectedImage,
-                                videoUri = selectedVideo
-                            )
-                            // Show success dialog after upload completes.
-                            showSuccessDialog = true
+                        // Validate required fields
+                        when {
+                            brand.isBlank() -> {
+                                errorMessage = "Please enter a brand name"
+                                showErrorDialog = true
+                            }
+                            model.isBlank() -> {
+                                errorMessage = "Please enter a model name"
+                                showErrorDialog = true
+                            }
+                            article.isBlank() -> {
+                                errorMessage = "Please enter article content"
+                                showErrorDialog = true
+                            }
+                            else -> {
+                                // If all required fields are filled, proceed with upload
+                                coroutineScope.launch {
+                                    motorcycleViewModel.uploadMotorcycle(
+                                        brand = brand,
+                                        model = model,
+                                        detail = article,
+                                        postedBy = postedByDocId,
+                                        dateString = convertMillisToDate(selectedDate),
+                                        imageUri = selectedImage,
+                                        videoUri = selectedVideo
+                                    )
+                                    // Show success dialog after upload completes
+                                    showSuccessDialog = true
+                                }
+                            }
                         }
                     },
                     colors = ButtonDefaults.buttonColors(Color(0xFF4CAF50)),
@@ -267,9 +288,20 @@ fun UploadScreen(modifier: Modifier = Modifier, motorcycleViewModel: MotorcycleV
 
             // Show success pop-up dialog when upload completes
             if (showSuccessDialog) {
-                SuccessDialog(title = "Upload Successful",
+                SuccessDialog(
+                    title = "Upload Successful",
                     text = "Your motorcycle article has been successfully uploaded!, wait for the admin to approve your article",
-                    onDismiss = { showSuccessDialog = false })
+                    onDismiss = { showSuccessDialog = false }
+                )
+            }
+
+            // Show error dialog when validation fails
+            if (showErrorDialog) {
+                ErrorDialog(
+                    title = "Missing Information",
+                    text = errorMessage,
+                    onDismiss = { showErrorDialog = false }
+                )
             }
         }
     }
