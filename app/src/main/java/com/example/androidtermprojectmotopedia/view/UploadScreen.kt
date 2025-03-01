@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -51,6 +52,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.example.androidtermprojectmotopedia.repository.UserPreferencesRepository
 import com.example.androidtermprojectmotopedia.repository.UserRepository
+import com.example.androidtermprojectmotopedia.ui.backgrounds.UploadPageAnimatedBackground
 import com.example.androidtermprojectmotopedia.viewModel.MotorcycleViewModel
 import com.example.androidtermprojectmotopedia.viewModel.UserViewModel
 import com.example.androidtermprojectmotopedia.viewModel.UserViewModelFactory
@@ -110,162 +112,165 @@ fun UploadScreen(modifier: Modifier = Modifier, motorcycleViewModel: MotorcycleV
         }
     }
 
-    // Main Surface background
-    Surface(
-        modifier = modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
-    ) {
-        Column(
-            modifier = Modifier
-                .verticalScroll(scrollState)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+        // Main Surface background
+        Surface(
+            modifier = modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
         ) {
-            // Title
-            Text(
-                text = "Upload a Motorcycle Article",
-                style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.onBackground
-            )
+            Box(modifier = Modifier.fillMaxSize()) {
+                UploadPageAnimatedBackground()
 
-            // Row with image and video boxes side-by-side
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
+            Column(
+                modifier = Modifier
+                    .verticalScroll(scrollState)
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Image box
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .aspectRatio(1f)
-                        .clip(RoundedCornerShape(16.dp))
-                        .clickable {
-                            mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly
-                            pickMedia.launch(PickVisualMediaRequest(mediaType!!))
-                        }
-                        .background(Color.White),
-                    contentAlignment = Alignment.Center
+                // Title
+                Text(
+                    text = "Upload a Motorcycle Article",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+
+                // Row with image and video boxes side-by-side
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    AsyncImage(
-                        model = selectedImage,
-                        contentDescription = "Selected Image",
-                        modifier = Modifier.fillMaxSize()
+                    // Image box
+                    Card(
+                        modifier = Modifier
+                            .weight(1f)
+                            .aspectRatio(1f)
+                            .clickable {
+                                mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly
+                                pickMedia.launch(PickVisualMediaRequest(mediaType!!))
+                            },
+                        border = BorderStroke(1.dp, Color.LightGray),
                     )
+                    {
+                        AsyncImage(
+                            model = selectedImage,
+                            contentDescription = "Selected Image",
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
+                    // Video box
+                    Card(
+                        modifier = Modifier
+                            .weight(1f)
+                            .aspectRatio(1f)
+                            .clickable {
+                                mediaType = ActivityResultContracts.PickVisualMedia.VideoOnly
+                                pickMedia.launch(PickVisualMediaRequest(mediaType!!))
+                            },
+                        border = BorderStroke(1.dp, Color.LightGray)
+                    ) {
+                        AsyncImage(
+                            model = selectedVideo,
+                            contentDescription = "Selected Video",
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
                 }
-                // Video box
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .aspectRatio(1f)
-                        .clip(RoundedCornerShape(16.dp))
-                        .clickable {
-                            mediaType = ActivityResultContracts.PickVisualMedia.VideoOnly
-                            pickMedia.launch(PickVisualMediaRequest(mediaType!!))
-                        }
-                        .background(Color.White),
-                    contentAlignment = Alignment.Center
-                ) {
-                    AsyncImage(
-                        model = selectedVideo,
-                        contentDescription = "Selected Video",
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
-            }
 
-            // Brand text field
-            TextField(
-                value = brand,
-                onValueChange = { brand = it },
-                label = { Text("Brand") },
-                modifier = Modifier.fillMaxWidth(0.8f)
-            )
-
-            // Model text field
-            TextField(
-                value = model,
-                onValueChange = { model = it },
-                label = { Text("Model") },
-                modifier = Modifier.fillMaxWidth(0.8f)
-            )
-
-            // Row for date selection
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.fillMaxWidth(0.8f)
-            ) {
-                Text(text = convertMillisToDate(selectedDate))
-                Spacer(modifier = Modifier.weight(1f))
-                Button(onClick = { showModalInput = true }) {
-                    Text("Choose Release Date")
-                }
-            }
-
-            // Article input inside a Card
-            Card(
-                shape = RoundedCornerShape(16.dp),
-                modifier = Modifier.fillMaxWidth(0.8f)
-            ) {
+                // Brand text field
                 TextField(
-                    value = article,
-                    onValueChange = { article = it },
-                    label = { Text("Article") },
+                    value = brand,
+                    onValueChange = { brand = it },
+                    label = { Text("Brand") },
+                    modifier = Modifier.fillMaxWidth(0.8f)
+                )
+
+                // Model text field
+                TextField(
+                    value = model,
+                    onValueChange = { model = it },
+                    label = { Text("Model") },
+                    modifier = Modifier.fillMaxWidth(0.8f)
+                )
+
+                // Row for date selection
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier.fillMaxWidth(0.8f)
+                ) {
+                    Text(text = convertMillisToDate(selectedDate))
+                    Spacer(modifier = Modifier.weight(1f))
+                    Button(onClick = { showModalInput = true },
+                        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onBackground)
+                    ) {
+                        Text("Choose Release Date")
+                    }
+                }
+
+                // Article input inside a Card
+                Card(
+                    shape = RoundedCornerShape(16.dp),
+                    modifier = Modifier.fillMaxWidth(0.8f)
+                ) {
+                    TextField(
+                        value = article,
+                        onValueChange = { article = it },
+                        label = { Text("Article") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(120.dp)
+                            .padding(8.dp)
+                    )
+                }
+
+                // Upload button
+                Button(
+                    onClick = {
+                        // Launch a coroutine to upload the motorcycle article.
+                        coroutineScope.launch {
+                            motorcycleViewModel.uploadMotorcycle(
+                                brand = brand,
+                                model = model,
+                                detail = article,
+                                postedBy = postedByDocId,
+                                dateString = convertMillisToDate(selectedDate),
+                                imageUri = selectedImage,
+                                videoUri = selectedVideo
+                            )
+                            // Show success dialog after upload completes.
+                            showSuccessDialog = true
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(Color(0xFF4CAF50)),
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(120.dp)
-                        .padding(8.dp)
+                        .fillMaxWidth(0.5f)
+                        .padding(top = 8.dp),
+                    shape = RoundedCornerShape(16.dp)
+                ) {
+                    Text("Upload", color = Color.White)
+                }
+            }
+
+            // Show date picker dialog if needed
+            if (showModalInput) {
+                DatePickerModalInput(
+                    onDateSelected = {
+                        if (it != null) {
+                            selectedDate = it
+                        }
+                        showModalInput = false
+                    },
+                    onDismiss = { showModalInput = false }
                 )
             }
 
-            // Upload button
-            Button(
-                onClick = {
-                    // Launch a coroutine to upload the motorcycle article.
-                    coroutineScope.launch {
-                        motorcycleViewModel.uploadMotorcycle(
-                            brand = brand,
-                            model = model,
-                            detail = article,
-                            postedBy = postedByDocId,
-                            dateString = convertMillisToDate(selectedDate),
-                            imageUri = selectedImage,
-                            videoUri = selectedVideo
-                        )
-                        // Show success dialog after upload completes.
-                        showSuccessDialog = true
-                    }
-                },
-                colors = ButtonDefaults.buttonColors(Color(0xFF4CAF50)),
-                modifier = Modifier
-                    .fillMaxWidth(0.5f)
-                    .padding(top = 8.dp),
-                shape = RoundedCornerShape(16.dp)
-            ) {
-                Text("Upload", color = Color.White)
+            // Show success pop-up dialog when upload completes
+            if (showSuccessDialog) {
+                SuccessDialog(title = "Upload Successful",
+                    text = "Your motorcycle article has been successfully uploaded!, wait for the admin to approve your article",
+                    onDismiss = { showSuccessDialog = false })
             }
-        }
-
-        // Show date picker dialog if needed
-        if (showModalInput) {
-            DatePickerModalInput(
-                onDateSelected = {
-                    if (it != null) {
-                        selectedDate = it
-                    }
-                    showModalInput = false
-                },
-                onDismiss = { showModalInput = false }
-            )
-        }
-
-        // Show success pop-up dialog when upload completes
-        if (showSuccessDialog) {
-            SuccessDialog(title = "Upload Successful",
-                text = "Your motorcycle article has been successfully uploaded!, wait for the admin to approve your article",
-                onDismiss = { showSuccessDialog = false })
         }
     }
 }
