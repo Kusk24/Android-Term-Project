@@ -7,8 +7,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -23,19 +28,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.androidtermprojectmotopedia.ui.backgrounds.AnimatedLayeredWavesBackground
-import com.example.androidtermprojectmotopedia.ui.backgrounds.CurlyLineBackground
-import com.example.androidtermprojectmotopedia.ui.backgrounds.CurlyLineBackgroundVariant1
-import com.example.androidtermprojectmotopedia.ui.backgrounds.CurlyLineBackgroundVariant2
-import com.example.androidtermprojectmotopedia.ui.backgrounds.CurlyLineBackgroundVariant3
-import com.example.androidtermprojectmotopedia.ui.backgrounds.DiagonalGradientBackground
-import com.example.androidtermprojectmotopedia.ui.backgrounds.LayeredWavesBackground
-import com.example.androidtermprojectmotopedia.ui.backgrounds.WaveBackground
+import com.example.androidtermprojectmotopedia.util.EncryptionUtils
 import com.example.androidtermprojectmotopedia.viewModel.MotorcycleViewModel
-import com.example.androidtermprojectmotopedia.viewModel.NotificationViewModel
 import com.example.androidtermprojectmotopedia.viewModel.UserViewModel
 
 @Composable
@@ -44,16 +44,23 @@ fun LoginPage(
     errorMessage: String? = null,
     loginButtonClicked: (String, String) -> Unit
 ) {
+    val context = LocalContext.current
+
     // States for text fields
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
+
+    // On first load, clear any stored password so that the password field is always empty
+    LaunchedEffect(Unit) {
+        EncryptionUtils.clearPassword(context)
+        password = ""
+    }
 
     // Top-level Box for background or padding
     Box(
-        modifier = modifier
-            .fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
-
         AnimatedLayeredWavesBackground()
 
         // Main column in the center
@@ -88,12 +95,32 @@ fun LoginPage(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Password Field
+            // Password Field with "eye" icon to toggle visibility
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
                 label = { Text("Password") },
-                modifier = Modifier.fillMaxWidth(0.8f)
+                modifier = Modifier.fillMaxWidth(0.8f),
+                visualTransformation = if (passwordVisible) {
+                    VisualTransformation.None
+                } else {
+                    PasswordVisualTransformation()
+                },
+                trailingIcon = {
+                    val icon = if (passwordVisible) {
+                        Icons.Filled.Visibility
+                    } else {
+                        Icons.Filled.VisibilityOff
+                    }
+
+                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        Icon(
+                            imageVector = icon,
+                            contentDescription =
+                            if (passwordVisible) "Hide password" else "Show password"
+                        )
+                    }
+                }
             )
 
             // Error message if present
@@ -110,7 +137,12 @@ fun LoginPage(
 
             // Login button
             Button(
-                onClick = { loginButtonClicked(email, password) },
+                onClick = {
+                    // Encrypt & store the password locally if desired
+                    EncryptionUtils.storePassword(context, password)
+                    // Then call the original login function
+                    loginButtonClicked(email, password)
+                },
                 modifier = Modifier
                     .fillMaxWidth(0.5f)
                     .height(48.dp),
@@ -121,8 +153,6 @@ fun LoginPage(
         }
     }
 }
-
-
 
 @Composable
 fun LoginScreen(
@@ -140,10 +170,9 @@ fun LoginScreen(
 
     if (currentUser?.docId.isNullOrEmpty()) {
         // Show login UI
-        // Wrap in a Surface with a consistent background color
         Surface(
             modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
+            color = androidx.compose.material3.MaterialTheme.colorScheme.background
         ) {
             LoginPage(
                 loginButtonClicked = { email, password ->
@@ -154,10 +183,10 @@ fun LoginScreen(
         }
     } else {
         // Already logged in
-        MainAppScreen(userViewModel = userViewModel,
+        MainAppScreen(
+            userViewModel = userViewModel,
             motorcycleViewModel = motorcycleViewModel,
             windowSizeClass = windowSizeClass
         )
     }
 }
-
