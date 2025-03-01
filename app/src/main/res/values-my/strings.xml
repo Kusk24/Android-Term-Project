@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Android Term Project (Motopedia)</string>
     <string name="profile_name">ပရီုဖိုင် နာမည်</string>
-    <string name="uses">အသုံးပြုမှု</string>
+    <string name="usage">အသုံးပြုမှု</string>
     <string name="home">အိမ်</string>
     <string name="search">ရှာရန်</string>
     <string name="explore_brand">ဘရန်းများ လေ့လာရန်</string>
