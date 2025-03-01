@@ -45,8 +45,9 @@ fun ArticleListScreen(
 
     val motorcycles by motorcycleViewModel.motorcycles.collectAsState()
     val errorMessage by motorcycleViewModel.errorMessage.collectAsState()
-    val groupedByBrand = remember(motorcycles) {
-        motorcycles.groupBy { it.brand }
+    val approvedMotorcycles = motorcycles.filter { it.status != "pending" }
+    val groupedByBrand = remember(approvedMotorcycles) {
+        approvedMotorcycles.groupBy { it.brand }
     }
 
     if (errorMessage != null) {
