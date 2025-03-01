@@ -69,6 +69,10 @@ fun SettingScreen(
 
     val scrollState = rememberScrollState()
 
+    var helpSupport by remember { mutableStateOf(false) }
+
+    var faqs by remember { mutableStateOf(false)}
+
     // State to control showing the language dialog
     var showLanguageDialog by remember { mutableStateOf(false) }
     // Notification toggle
@@ -194,7 +198,7 @@ fun SettingScreen(
             // 4) Row for "Help & Support"
             Row(
                 modifier = Modifier
-                    .clickable { /* ... */ }
+                    .clickable { helpSupport = true }
                     .constrainAs(box4) {
                         top.linkTo(box3.bottom, margin = 50.dp)
                         start.linkTo(parent.start)
@@ -218,7 +222,7 @@ fun SettingScreen(
             // 5) Row for "FAQs"
             Row(
                 modifier = Modifier
-                    .clickable { /* ... */ }
+                    .clickable { faqs = true }
                     .constrainAs(box5) {
                         top.linkTo(box4.bottom, margin = 50.dp)
                         start.linkTo(parent.start)
@@ -271,6 +275,18 @@ fun SettingScreen(
             onDismiss = {
                 showLogoutDialog = false
             }
+        )
+    }
+
+    if (helpSupport) {
+        HelpSupportDialog (
+             onDismiss = { helpSupport = false }
+        )
+    }
+
+    if (faqs) {
+        FAQDialog (
+            onDismiss = { faqs = false}
         )
     }
 }
