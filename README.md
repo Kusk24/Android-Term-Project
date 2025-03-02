@@ -11,8 +11,8 @@ Motopedia is a platform designed like Wikipedia, focusing on motorcycle-related 
 
 ## Setup
 1. Clone the repo from GitHub
-2. Add `google-services.json` in your app/ directory
+2. Add `google-services.json` in your app/ directory ('Android-Term-Project/app/google-services.json')
 3. In `local.properties`, add your Google Maps API key:
    GOOGLE_MAPS_API_KEY=YOUR_GOOGLE_MAPS_API_KEY
-5. 4. Build and run in Android Studio
-6. Enjoy exploring and contributing!
+4. Build and run in Android Studio
+5. Enjoy exploring and contributing!
