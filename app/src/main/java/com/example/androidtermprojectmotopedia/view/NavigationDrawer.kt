@@ -43,11 +43,11 @@ fun DetailedDrawer(
     val scope = rememberCoroutineScope()
     var selectedItem by remember { mutableStateOf("Home") }
     val currentTheme by userViewModel.darkTheme.observeAsState(false)
-    var currentUser = userViewModel.currentUser.collectAsState().value
+    val currentUser = userViewModel.currentUser.collectAsState().value
 
     ModalDrawerSheet(
         drawerContainerColor = (MaterialTheme.colorScheme.background),
-        modifier = Modifier.width(300.dp)  // <-- fix the width
+        modifier = Modifier.width(300.dp)
     ) {
         Column(
             modifier = Modifier

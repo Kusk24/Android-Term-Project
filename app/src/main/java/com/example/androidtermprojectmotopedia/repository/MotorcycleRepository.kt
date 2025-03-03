@@ -18,7 +18,7 @@ class MotorcycleRepository(
     private val motorcyclesRef = db.collection("motorcycles")
 
     /**
-     * 1) Read all motorcycle docs once (not real-time).
+     * 1) Read all motorcycle docs once.
      */
     suspend fun getAllMotorcyclesOnce(): List<Motorcycle> {
         val snapshot = motorcyclesRef.get().await()
@@ -76,7 +76,7 @@ class MotorcycleRepository(
             "status"         to newMotorcycle.status,
             "video"          to newMotorcycle.video,
             "request_delete" to newMotorcycle.request_delete,
-            "uploaded_date"  to newMotorcycle.uploaded_date  // <--- include it in Firestore
+            "uploaded_date"  to newMotorcycle.uploaded_date
         )
         motorcyclesRef.add(data).await()
     }
@@ -151,7 +151,6 @@ class MotorcycleRepository(
         val docSnapshot = motorcyclesRef.document(docId).get().await()
         return if (docSnapshot.exists()) {
             // Convert the document to a Motorcycle object.
-            // Option 1: Manually map the fields (like your existing code).
             val brand = docSnapshot.getString("brand") ?: ""
             val detail = docSnapshot.getString("detail") ?: ""
             val image = docSnapshot.getString("image") ?: ""
@@ -188,9 +187,6 @@ class MotorcycleRepository(
                 uploaded_date = uploadedDate
             )
 
-            // Option 2 (if your data class structure is simpler):
-            // docSnapshot.toObject(Motorcycle::class.java)?.copy(docId = docSnapshot.id)
-
         } else {
             null
         }
@@ -217,7 +213,7 @@ private fun QuerySnapshot.toMotorcycleList(): List<Motorcycle> {
             is com.google.firebase.Timestamp -> {
                 // Convert Timestamp to a formatted String, if needed.
                 val date = dateField.toDate()
-                // You can reuse the same date format you use on upload:
+                // Reuse the same date format used on upload:
                 val dateFormat = java.text.SimpleDateFormat(
                     "MMMM dd, yyyy 'at' hh:mm:ss a 'UTC'Z",
                     java.util.Locale.getDefault()

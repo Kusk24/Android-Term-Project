@@ -34,7 +34,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.androidtermprojectmotopedia.viewModel.MotorcycleViewModel
-import com.example.androidtermprojectmotopedia.viewModel.NotificationViewModel
 import com.example.androidtermprojectmotopedia.viewModel.UserViewModel
 import kotlinx.coroutines.delay
 
@@ -45,7 +44,7 @@ fun RootScreen(
     modifier: Modifier = Modifier,
     motorcycleViewModel: MotorcycleViewModel
 ) {
-    // 1) Ensure we try to load the current user from DataStore/Firestore
+    // 1) Try to load the current user from DataStore/Firestore
     LaunchedEffect(Unit) {
         userViewModel.loadCurrentUser()
     }
@@ -69,7 +68,7 @@ fun RootScreen(
         // Still loading or forcing splash duration
         SplashScreen()
     } else {
-        // isLoggedIn is no longer null and we've shown splash for at least 2s
+        // isLoggedIn is no longer null and shown splash for at least 2s
         when (isLoggedIn) {
             true -> MainAppScreen(
                 userViewModel = userViewModel,
@@ -82,7 +81,7 @@ fun RootScreen(
                 motorcycleViewModel = motorcycleViewModel,
                 windowSizeClass = widthSizeClass
                 )
-            // null shouldn't happen here, but if it does, you could fallback to SplashScreen or a default.
+            // null shouldn't happen here, but if it does, fallback to SplashScreen or a default.
             null -> SplashScreen()
         }
     }

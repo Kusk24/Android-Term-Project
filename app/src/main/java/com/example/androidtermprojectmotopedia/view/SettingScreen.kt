@@ -140,11 +140,11 @@ fun SettingScreen(
                     contentDescription = null
                 )
                 Spacer(modifier = Modifier.width(12.dp))
-                // Display the full language name from our map
+                // Display the full language name from map
                 Text(text = stringResource(R.string.language) + ": ${languageMap[languageCode] ?: languageCode}")
             }
 
-            // Show the language dialog if needed
+            // Show the language dialog
             if (showLanguageDialog) {
                 LanguageSelectionDialog(
                     // Pass the actual language code
@@ -269,8 +269,8 @@ fun SettingScreen(
         LogoutWarningDialog(
             onConfirm = {
                 showLogoutDialog = false
-                // Call your logout logic, e.g., clear user session
-                userViewModel.logoutUser() // Implement this function in your ViewModel as needed
+                // Call logout logic, e.g., clear user session
+                userViewModel.logoutUser()
             },
             onDismiss = {
                 showLogoutDialog = false

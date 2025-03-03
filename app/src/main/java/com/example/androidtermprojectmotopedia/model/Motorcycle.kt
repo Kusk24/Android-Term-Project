@@ -1,14 +1,7 @@
 package com.example.androidtermprojectmotopedia.model
 
-//data class Motorcycle(
-//    val name: String,
-//    val engine: String,
-//    val image: String
-//)
 /**
- * A model matching your Firestore fields:
  * brand, detail, image, model, posted_by, release_date, status, video.
- *
  * docId is optional but helps track the Firestore document ID.
  */
 data class Motorcycle(
@@ -22,5 +15,5 @@ data class Motorcycle(
     val video: String = "",
     val docId: String = "" ,  // Firestore doc ID (not a field in the DB)
     val request_delete : Boolean = false,
-    val uploaded_date: String = ""  // <--- NEW FIELD
+    val uploaded_date: String = ""
 )

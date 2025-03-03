@@ -15,8 +15,8 @@ class UserRepository {
 
     /**
      * Create a new user with a specified docId (e.g., "user1")
-     * or some custom string ID you generate.
-     * If you want Firestore to generate an ID, see addUserAutoId().
+     * or some custom generated string ID.
+     * Firestore to generate an ID, see addUserAutoId().
      */
     suspend fun updateUserFields(docId: String, fields: Map<String, Any>) {
         userCollection().document(docId).update(fields).await()
@@ -32,7 +32,6 @@ class UserRepository {
 
     /**
      * Basic "login" approach: find user by email & password.
-     * This is NOT secure for production, but works as a demo.
      */
     suspend fun loginUser(email: String, password: String): UserWithId? {
         val querySnapshot = userCollection()

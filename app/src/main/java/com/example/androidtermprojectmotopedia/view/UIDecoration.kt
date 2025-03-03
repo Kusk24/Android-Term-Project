@@ -640,7 +640,7 @@ fun ProfilePageAnimatedBackground(
     // Custom color scheme optimized for profile page
     val goldColor = MaterialTheme.colorScheme.primary
     val creamColor = MaterialTheme.colorScheme.background
-    val accentColor = Color(0xFFE25822) // Orange accent inspired by KTM
+    val accentColor = Color(0xFFE25822)
 
     // Create animation controllers
     val infiniteTransition = rememberInfiniteTransition(label = "profile_bg")

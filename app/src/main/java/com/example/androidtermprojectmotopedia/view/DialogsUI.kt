@@ -127,16 +127,16 @@ fun ConfirmDeleteDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { androidx.compose.material3.Text("Confirm Deletion") },
-        text = { androidx.compose.material3.Text(message) },
+        title = { Text("Confirm Deletion") },
+        text = { Text(message) },
         confirmButton = {
             TextButton(onClick = onConfirm) {
-                androidx.compose.material3.Text("Yes, Delete")
+                Text("Yes, Delete")
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                androidx.compose.material3.Text("Cancel")
+                Text("Cancel")
             }
         }
     )
@@ -203,7 +203,6 @@ fun HelpSupportDialog(
 
 /**
  * Simple FAQ dialog that displays a list of Q&A items.
- * Customize or replace the hardcoded Q&A with your own content.
  */
 @Composable
 fun FAQDialog(

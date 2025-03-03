@@ -22,7 +22,7 @@ import com.example.androidtermprojectmotopedia.viewModel.UserViewModel
 @Composable
 fun AccountInformationScreen(
     viewModel: UserViewModel,
-    onBackClick: () -> Unit,  // pass a callback that navigates back (e.g. navController.popBackStack())
+    onBackClick: () -> Unit,  // pass a callback that navigates back
     modifier: Modifier = Modifier
 ) {
     var name by remember { mutableStateOf("") }
@@ -167,7 +167,7 @@ fun AccountInformationScreen(
                     }
                 }
             } else {
-                // Portrait layout - similar to original but with scrolling and width constraints
+                // Portrait layout with scrolling and width constraints
                 Column(
                     modifier = modifier
                         .fillMaxWidth(0.9f)

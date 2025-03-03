@@ -1,16 +1,11 @@
 package com.example.androidtermprojectmotopedia.ui.theme
 
-import android.app.Activity
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 
 //private val DarkColorScheme = darkColorScheme(
 //    primary = Purple80,
@@ -47,7 +42,7 @@ private val LightColorScheme = lightColorScheme(
     onBackground = DarkGray,
     onSurface = DarkGray,
 
-    surfaceVariant = CardLight, // A custom, soft light color for cards, for example
+    surfaceVariant = CardLight, // A custom, soft light color for cards
 )
 
 private val DarkColorScheme = darkColorScheme(
@@ -63,7 +58,7 @@ private val DarkColorScheme = darkColorScheme(
     onBackground = LightGrayText,    // Light gray text on background
     onSurface = LightGrayText,        // Light gray text on surfaces
 
-    surfaceVariant = CardDark, // A custom, soft light color for cards, for example
+    surfaceVariant = CardDark, // A custom, soft light color for cards
 )
 
 

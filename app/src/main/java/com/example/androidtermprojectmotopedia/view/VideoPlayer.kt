@@ -111,7 +111,6 @@ fun VideoPlayer(
                 useController = true
                 setShowBuffering(PlayerView.SHOW_BUFFERING_ALWAYS)
 
-                // Fix video display issues:
                 // 1. Set proper resize mode
                 resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
 

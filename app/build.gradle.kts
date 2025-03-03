@@ -118,15 +118,8 @@ dependencies {
 
     implementation ("androidx.compose.material3:material3:1.3.1")
 
-    // Compose Material3 components.
-    // For swipe-to-dismiss support, Material3 is enough.
-
-    // ConstraintLayout for Compose.
     implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
 
-    // Coil for Compose image loading.
-
-    // Other Compose dependencies if not already added.
     implementation ("androidx.compose.ui:ui:1.7.8")
     implementation ("androidx.compose.ui:ui-tooling-preview:1.7.8")
     implementation ("androidx.activity:activity-compose:1.7.0")
